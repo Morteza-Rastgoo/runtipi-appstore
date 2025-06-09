@@ -1,55 +1,55 @@
-name: Sync Specific Branch with Upstream
+# name: Sync Specific Branch with Upstream
 
-on:
-  # این ورک‌فلو هر روز ساعت 00:00 UTC اجرا می‌شود
-  schedule:
-    - cron: '0 0 * * *'
-  # همچنین می‌توانید به صورت دستی هم این ورک‌فلو را اجرا کنید
-  workflow_dispatch:
+# on:
+#   # این ورک‌فلو هر روز ساعت 00:00 UTC اجرا می‌شود
+#   schedule:
+#     - cron: '0 0 * * *'
+#   # همچنین می‌توانید به صورت دستی هم این ورک‌فلو را اجرا کنید
+#   workflow_dispatch:
 
-jobs:
-  sync_branch:
-    runs-on: ubuntu-latest
+# jobs:
+#   sync_branch:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout your fork
-        uses: actions/checkout@v4
-        with:
-          # باید فچ‌دپث را 0 یا بزرگتر تنظیم کنید تا git fetch بعدی درست کار کند
-          fetch-depth: 0
+#     steps:
+#       - name: Checkout your fork
+#         uses: actions/checkout@v4
+#         with:
+#           # باید فچ‌دپث را 0 یا بزرگتر تنظیم کنید تا git fetch بعدی درست کار کند
+#           fetch-depth: 0
 
-      - name: Add upstream remote
-        run: |
-          # URL ریپوی مادر را جایگزین کنید
-          # مثال: https://github.com/original-owner/original-repo.git
-          UPSTREAM_REPO="https://github.com/runtipi/runtipi-appstore"
-          git remote add upstream $UPSTREAM_REPO || echo "Upstream remote already exists"
+#       - name: Add upstream remote
+#         run: |
+#           # URL ریپوی مادر را جایگزین کنید
+#           # مثال: https://github.com/original-owner/original-repo.git
+#           UPSTREAM_REPO="https://github.com/runtipi/runtipi-appstore"
+#           git remote add upstream $UPSTREAM_REPO || echo "Upstream remote already exists"
 
-      - name: Fetch upstream branch
-        run: |
-          # نام شاخه مورد نظر در ریپوی مادر را جایگزین کنید
-          UPSTREAM_BRANCH="master"
-          git fetch upstream $UPSTREAM_BRANCH
+#       - name: Fetch upstream branch
+#         run: |
+#           # نام شاخه مورد نظر در ریپوی مادر را جایگزین کنید
+#           UPSTREAM_BRANCH="master"
+#           git fetch upstream $UPSTREAM_BRANCH
 
-      - name: Checkout your fork branch
-        run: |
-          # نام شاخه مورد نظر در فورک خودتان را جایگزین کنید
-          YOUR_FORK_BRANCH="multiple-wordpress-instances"
-          git checkout $YOUR_FORK_BRANCH
+#       - name: Checkout your fork branch
+#         run: |
+#           # نام شاخه مورد نظر در فورک خودتان را جایگزین کنید
+#           YOUR_FORK_BRANCH="multiple-wordpress-instances"
+#           git checkout $YOUR_FORK_BRANCH
 
-      - name: Merge upstream into your branch
-        run: |
-          # نام شاخه مورد نظر در ریپوی مادر را جایگزین کنید
-          UPSTREAM_BRANCH="master"
-          git merge upstream/$UPSTREAM_BRANCH --no-edit
-          # توجه: اگر تعارض (Conflict) پیش بیاید، این مرحله Fail می‌شود.
-          # در صورت Fail شدن به دلیل تعارض، باید به صورت دستی تعارض را حل کنید.
+#       - name: Merge upstream into your branch
+#         run: |
+#           # نام شاخه مورد نظر در ریپوی مادر را جایگزین کنید
+#           UPSTREAM_BRANCH="master"
+#           git merge upstream/$UPSTREAM_BRANCH --no-edit
+#           # توجه: اگر تعارض (Conflict) پیش بیاید، این مرحله Fail می‌شود.
+#           # در صورت Fail شدن به دلیل تعارض، باید به صورت دستی تعارض را حل کنید.
 
-      - name: Push changes to your fork
-        run: |
-          # نام شاخه مورد نظر در فورک خودتان را جایگزین کنید
-          YOUR_FORK_BRANCH="multiple-wordpress-instances"
-          git push origin $YOUR_FORK_BRANCH
-        env:
-          # GITHUB_TOKEN به صورت خودکار توسط GitHub Actions فراهم می‌شود
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Push changes to your fork
+#         run: |
+#           # نام شاخه مورد نظر در فورک خودتان را جایگزین کنید
+#           YOUR_FORK_BRANCH="multiple-wordpress-instances"
+#           git push origin $YOUR_FORK_BRANCH
+#         env:
+#           # GITHUB_TOKEN به صورت خودکار توسط GitHub Actions فراهم می‌شود
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
