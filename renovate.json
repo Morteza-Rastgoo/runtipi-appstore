@@ -1,12 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
   "automerge": false,
+  "prHourlyLimit": 5,
+  "extends": ["config:recommended"],
   "rebaseWhen": "conflicted",
+  "enabledManagers": ["regex"],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["^.*docker-compose\\.json$"],
+      "fileMatch": ["^.*docker-compose\\.json$"],
       "matchStrings": ["\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","],
       "datasourceTemplate": "docker"
     }
@@ -17,32 +19,20 @@
       "addLabels": ["major"]
     },
     {
-      "matchUpdateTypes": ["minor"],
-      "addLabels": ["minor", "automerge"]
-    },
-    {
-      "matchUpdateTypes": ["patch"],
-      "addLabels": ["patch", "automerge"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "addLabels": ["automerge"]
     },
     {
       "matchPackageNames": ["mariadb", "mysql", "monogdb", "postgres", "redis", "immich", "immich{-,}**"],
       "enabled": false
     }
   ],
-  "hostRules": [
-    {
-      "matchHost": "index.docker.io",
-      "hostType": "docker",
-      "username": "{{ secrets.DOCKERHUB_USERNAME }}",
-      "password": "{{ secrets.DOCKERHUB_TOKEN }}"
-    },
-    {
-      "matchHost": "docker.io",
-      "concurrentRequestLimit": 2
-    }
-  ],
   "postUpgradeTasks": {
-    "commands": ["bun ./scripts/update-config.ts {{packageFile}} {{newVersion}}", "bunx @biomejs/biome check --write", "bun install && bun run test"],
+    "commands": [
+      "bun ./scripts/update-config.ts {{packageFile}} {{newVersion}} {{packageName}}",
+      "bunx @biomejs/biome@2.0.0 check --write",
+      "bun install && bun run test"
+    ],
     "fileFilters": ["**/*"],
     "executionMode": "update"
   }
