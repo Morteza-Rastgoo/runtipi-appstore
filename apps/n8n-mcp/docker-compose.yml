@@ -1,0 +1,39 @@
+services:
+  n8n-mcp:
+    image: ghcr.io/czlonkowski/n8n-mcp:latest
+    container_name: n8n-mcp
+    restart: unless-stopped
+    environment:
+      - N8N_BASE_URL=${N8N_BASE_URL}
+      - N8N_API_TOKEN=${N8N_API_TOKEN}
+      - SERVER_PORT=${SERVER_PORT:-8216}
+    ports:
+      - "${APP_PORT}:${SERVER_PORT:-8216}"
+    networks:
+      - tipi_main_network
+    labels:
+      # Traefik labels for external access
+      - traefik.enable=true
+      - traefik.http.middlewares.n8n-mcp-web-redirect.redirectscheme.scheme=https
+      - traefik.http.services.n8n-mcp.loadbalancer.server.port=${SERVER_PORT:-8216}
+      - traefik.http.routers.n8n-mcp-insecure.rule=Host(`${APP_DOMAIN}`)
+      - traefik.http.routers.n8n-mcp-insecure.middlewares=n8n-mcp-web-redirect
+      - traefik.http.routers.n8n-mcp-insecure.service=n8n-mcp
+      - traefik.http.routers.n8n-mcp.rule=Host(`${APP_DOMAIN}`)
+      - traefik.http.routers.n8n-mcp.tls.certresolver=myresolver
+      - traefik.http.routers.n8n-mcp.service=n8n-mcp
+      - traefik.http.routers.n8n-mcp.tls=true
+      # Local access labels
+      - tipi.exposed=true
+      - tipi.main_app=true
+      - runtipi.managed=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${SERVER_PORT:-8216}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  tipi_main_network:
+    external: true
