@@ -31,7 +31,7 @@
       },
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/data/mariadb",
+          "hostPath": "${APP_DATA_DIR}/data/wordpress3-db",
           "containerPath": "/var/lib/mysql"
         }
       ]
