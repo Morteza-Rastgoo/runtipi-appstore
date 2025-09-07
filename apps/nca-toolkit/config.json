@@ -20,15 +20,23 @@
   "form_fields": [
     {
       "type": "text",
-      "label": "OpenAI API Key",
+      "label": "API Key (Required for authentication)",
+      "max": 100,
+      "min": 10,
+      "required": true,
+      "env_variable": "API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "OpenAI API Key (Optional)",
       "max": 100,
       "min": 20,
-      "required": true,
+      "required": false,
       "env_variable": "OPENAI_API_KEY"
     },
     {
       "type": "text",
-      "label": "Anthropic API Key",
+      "label": "Anthropic API Key (Optional)",
       "max": 100,
       "min": 20,
       "required": false,
@@ -36,7 +44,7 @@
     },
     {
       "type": "text",
-      "label": "Google API Key",
+      "label": "Google API Key (Optional)",
       "max": 100,
       "min": 20,
       "required": false,
@@ -44,11 +52,99 @@
     },
     {
       "type": "text",
+      "label": "S3 Endpoint URL (Optional, for S3 storage)",
+      "max": 200,
+      "min": 5,
+      "required": false,
+      "env_variable": "S3_ENDPOINT_URL"
+    },
+    {
+      "type": "text",
+      "label": "S3 Access Key (Optional, for S3 storage)",
+      "max": 100,
+      "min": 5,
+      "required": false,
+      "env_variable": "S3_ACCESS_KEY"
+    },
+    {
+      "type": "password",
+      "label": "S3 Secret Key (Optional, for S3 storage)",
+      "max": 100,
+      "min": 5,
+      "required": false,
+      "env_variable": "S3_SECRET_KEY"
+    },
+    {
+      "type": "text",
+      "label": "S3 Bucket Name (Optional, for S3 storage)",
+      "max": 100,
+      "min": 3,
+      "required": false,
+      "env_variable": "S3_BUCKET_NAME"
+    },
+    {
+      "type": "text",
+      "label": "S3 Region (Optional, for S3 storage)",
+      "max": 50,
+      "min": 2,
+      "required": false,
+      "env_variable": "S3_REGION"
+    },
+    {
+      "type": "text",
+      "label": "GCP Service Account JSON (Optional, for GCP storage)",
+      "max": 500,
+      "min": 50,
+      "required": false,
+      "env_variable": "GCP_SA_CREDENTIALS"
+    },
+    {
+      "type": "text",
+      "label": "GCP Bucket Name (Optional, for GCP storage)",
+      "max": 100,
+      "min": 3,
+      "required": false,
+      "env_variable": "GCP_BUCKET_NAME"
+    },
+    {
+      "type": "text",
+      "label": "Local Storage Path (Optional)",
+      "max": 200,
+      "min": 1,
+      "required": false,
+      "env_variable": "LOCAL_STORAGE_PATH"
+    },
+    {
+      "type": "number",
+      "label": "Max Queue Length (Optional)",
+      "max": 1000,
+      "min": 0,
+      "required": false,
+      "env_variable": "MAX_QUEUE_LENGTH"
+    },
+    {
+      "type": "number",
+      "label": "Gunicorn Workers (Optional)",
+      "max": 50,
+      "min": 1,
+      "required": false,
+      "env_variable": "GUNICORN_WORKERS"
+    },
+    {
+      "type": "number",
+      "label": "Gunicorn Timeout (Optional)",
+      "max": 3600,
+      "min": 30,
+      "required": false,
+      "env_variable": "GUNICORN_TIMEOUT"
+    },
+    {
+      "type": "text",
       "label": "Port",
       "max": 5,
       "min": 2,
       "required": false,
-      "env_variable": "PORT"
+      "env_variable": "APP_PORT"
     }
   ]
 }
