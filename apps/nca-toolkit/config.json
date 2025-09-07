@@ -1,0 +1,54 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "nca-toolkit",
+  "available": true,
+  "exposable": true,
+  "port": 8002,
+  "id": "nca-toolkit",
+  "description": "No-Code Architects Toolkit - A comprehensive AI toolkit for automation and workflows",
+  "tipi_version": 1,
+  "version": "latest",
+  "categories": [
+    "automation",
+    "ai",
+    "development"
+  ],
+  "short_desc": "AI toolkit for automation and workflows",
+  "author": "no-code-architects",
+  "source": "https://github.com/no-code-architects/no-code-architects-toolkit",
+  "website": "https://github.com/no-code-architects/no-code-architects-toolkit",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "OpenAI API Key",
+      "max": 100,
+      "min": 20,
+      "required": true,
+      "env_variable": "OPENAI_API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Anthropic API Key",
+      "max": 100,
+      "min": 20,
+      "required": false,
+      "env_variable": "ANTHROPIC_API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Google API Key",
+      "max": 100,
+      "min": 20,
+      "required": false,
+      "env_variable": "GOOGLE_API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Port",
+      "max": 5,
+      "min": 2,
+      "required": false,
+      "env_variable": "PORT"
+    }
+  ]
+}
