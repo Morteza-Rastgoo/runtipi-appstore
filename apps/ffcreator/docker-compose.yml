@@ -1,0 +1,44 @@
+services:
+  ffcreator:
+    container_name: ffcreator
+    image: jlesage/ffmpeg:v6.0.1
+    restart: unless-stopped
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - ${APP_DATA_DIR}/data:/config:rw
+      - ${APP_DATA_DIR}/media:/media:rw
+      - ${APP_DATA_DIR}/cache:/cache:rw
+    environment:
+      - API_KEY=${API_KEY}
+      - MAX_DURATION=${MAX_DURATION:-300}
+      - CACHE_LIMIT=${CACHE_LIMIT:-5}
+      - NODE_ENV=production
+      - TZ=${TZ}
+    networks:
+      - tipi_main_network
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.ffcreator-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.ffcreator.loadbalancer.server.port: 3000
+      traefik.http.routers.ffcreator-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.ffcreator-insecure.entrypoints: web
+      traefik.http.routers.ffcreator-insecure.service: ffcreator
+      traefik.http.routers.ffcreator-insecure.middlewares: ffcreator-web-redirect
+      traefik.http.routers.ffcreator.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.ffcreator.entrypoints: websecure
+      traefik.http.routers.ffcreator.service: ffcreator
+      traefik.http.routers.ffcreator.tls.certresolver: myresolver
+      traefik.http.routers.ffcreator-local-insecure.rule: Host(`ffcreator.${LOCAL_DOMAIN}`)
+      traefik.http.routers.ffcreator-local-insecure.entrypoints: web
+      traefik.http.routers.ffcreator-local-insecure.service: ffcreator
+      traefik.http.routers.ffcreator-local-insecure.middlewares: ffcreator-web-redirect
+      traefik.http.routers.ffcreator-local.rule: Host(`ffcreator.${LOCAL_DOMAIN}`)
+      traefik.http.routers.ffcreator-local.entrypoints: websecure
+      traefik.http.routers.ffcreator-local.service: ffcreator
+      traefik.http.routers.ffcreator-local.tls: true
+      runtipi.managed: true
+
+networks:
+  tipi_main_network:
+    external: true

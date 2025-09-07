@@ -33,6 +33,27 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.nca-toolkit-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.nca-toolkit.loadbalancer.server.port: 8080
+      traefik.http.routers.nca-toolkit-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.nca-toolkit-insecure.entrypoints: web
+      traefik.http.routers.nca-toolkit-insecure.service: nca-toolkit
+      traefik.http.routers.nca-toolkit-insecure.middlewares: nca-toolkit-web-redirect
+      traefik.http.routers.nca-toolkit.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.nca-toolkit.entrypoints: websecure
+      traefik.http.routers.nca-toolkit.service: nca-toolkit
+      traefik.http.routers.nca-toolkit.tls.certresolver: myresolver
+      traefik.http.routers.nca-toolkit-local-insecure.rule: Host(`nca-toolkit.${LOCAL_DOMAIN}`)
+      traefik.http.routers.nca-toolkit-local-insecure.entrypoints: web
+      traefik.http.routers.nca-toolkit-local-insecure.service: nca-toolkit
+      traefik.http.routers.nca-toolkit-local-insecure.middlewares: nca-toolkit-web-redirect
+      traefik.http.routers.nca-toolkit-local.rule: Host(`nca-toolkit.${LOCAL_DOMAIN}`)
+      traefik.http.routers.nca-toolkit-local.entrypoints: websecure
+      traefik.http.routers.nca-toolkit-local.service: nca-toolkit
+      traefik.http.routers.nca-toolkit-local.tls: true
+      runtipi.managed: true
 
 networks:
   tipi_main_network:

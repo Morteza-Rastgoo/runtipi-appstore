@@ -1,0 +1,48 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "FFCreator",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 8451,
+  "id": "ffcreator",
+  "tipi_version": 1,
+  "version": "6.7.3",
+  "categories": ["media", "automation", "development"],
+  "description": "FFCreator is a lightweight and flexible short video processing library based on Node.js. Create videos programmatically with images, text, animations, and effects. Perfect for automated social media content generation.",
+  "short_desc": "Node.js video creation library",
+  "author": "tnfe",
+  "source": "https://github.com/tnfe/FFCreator",
+  "website": "https://github.com/tnfe/FFCreator",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "API Key for authentication",
+      "max": 100,
+      "min": 10,
+      "required": true,
+      "env_variable": "API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Max video duration (seconds)",
+      "max": 4,
+      "min": 1,
+      "required": false,
+      "env_variable": "MAX_DURATION",
+      "hint": "Default: 300"
+    },
+    {
+      "type": "text",
+      "label": "Cache directory size limit (GB)",
+      "max": 4,
+      "min": 1,
+      "required": false,
+      "env_variable": "CACHE_LIMIT",
+      "hint": "Default: 5"
+    }
+  ],
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1749067100000,
+  "updated_at": 1749067100000
+}

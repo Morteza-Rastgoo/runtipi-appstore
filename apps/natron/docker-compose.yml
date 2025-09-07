@@ -1,0 +1,44 @@
+services:
+  natron:
+    container_name: natron
+    image: jlesage/natron:v2.5.0
+    restart: unless-stopped
+    ports:
+      - ${APP_PORT}:5800
+    volumes:
+      - ${APP_DATA_DIR}/data:/config:rw
+      - ${APP_DATA_DIR}/projects:/projects:rw
+    environment:
+      - USER_ID=1000
+      - GROUP_ID=1000
+      - TZ=${TZ}
+      - DISPLAY_WIDTH=${DISPLAY_WIDTH:-1280}
+      - DISPLAY_HEIGHT=${DISPLAY_HEIGHT:-720}
+      - VNC_PASSWORD=${VNC_PASSWORD:-}
+    networks:
+      - tipi_main_network
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.natron-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.natron.loadbalancer.server.port: 5800
+      traefik.http.routers.natron-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.natron-insecure.entrypoints: web
+      traefik.http.routers.natron-insecure.service: natron
+      traefik.http.routers.natron-insecure.middlewares: natron-web-redirect
+      traefik.http.routers.natron.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.natron.entrypoints: websecure
+      traefik.http.routers.natron.service: natron
+      traefik.http.routers.natron.tls.certresolver: myresolver
+      traefik.http.routers.natron-local-insecure.rule: Host(`natron.${LOCAL_DOMAIN}`)
+      traefik.http.routers.natron-local-insecure.entrypoints: web
+      traefik.http.routers.natron-local-insecure.service: natron
+      traefik.http.routers.natron-local-insecure.middlewares: natron-web-redirect
+      traefik.http.routers.natron-local.rule: Host(`natron.${LOCAL_DOMAIN}`)
+      traefik.http.routers.natron-local.entrypoints: websecure
+      traefik.http.routers.natron-local.service: natron
+      traefik.http.routers.natron-local.tls: true
+      runtipi.managed: true
+
+networks:
+  tipi_main_network:
+    external: true

@@ -1,0 +1,38 @@
+{
+  "services": {
+    "natron": {
+      "image": "natrongithub/natron:latest",
+      "container_name": "natron",
+      "restart": "unless-stopped",
+      "environment": [
+        "DISPLAY=${DISPLAY:-:0}",
+        "PUID=${PUID:-1000}",
+        "PGID=${PGID:-1000}",
+        "TZ=${TZ:-UTC}"
+      ],
+      "volumes": [
+        "${APP_DATA_DIR}/data/config:/home/natron/.config/Natron",
+        "${APP_DATA_DIR}/data/projects:/home/natron/Projects",
+        "${APP_DATA_DIR}/data/media:/home/natron/Media",
+        "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      ],
+      "ports": [
+        "${APP_PORT}:8080"
+      ],
+      "networks": ["tipi_main_network"],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.natron.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.natron.entrypoints": "websecure",
+        "traefik.http.routers.natron.tls.certresolver": "myresolver",
+        "traefik.http.services.natron.loadbalancer.server.port": "8080",
+        "runtipi.managed": "true"
+      }
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "external": true
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "services": {
+    "manim": {
+      "image": "manimcommunity/manim:latest",
+      "container_name": "manim",
+      "restart": "unless-stopped",
+      "command": "jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=${JUPYTER_TOKEN:-tipi}",
+      "environment": [
+        "JUPYTER_TOKEN=${JUPYTER_TOKEN:-tipi}",
+        "MANIM_QUALITY=${MANIM_QUALITY:-high_quality}",
+        "MANIM_OUTPUT_FORMAT=${MANIM_OUTPUT_FORMAT:-mp4}"
+      ],
+      "volumes": [
+        "${APP_DATA_DIR}/data/workspace:/workspace",
+        "${APP_DATA_DIR}/data/media:/media",
+        "${APP_DATA_DIR}/data/projects:/projects"
+      ],
+      "ports": [
+        "${APP_PORT}:8888"
+      ],
+      "networks": ["tipi_main_network"],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.manim.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.manim.entrypoints": "websecure",
+        "traefik.http.routers.manim.tls.certresolver": "myresolver",
+        "traefik.http.services.manim.loadbalancer.server.port": "8888",
+        "runtipi.managed": "true"
+      }
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "external": true
+    }
+  }
+}

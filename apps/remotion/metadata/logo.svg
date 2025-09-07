@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0f172a"/>
+  <ellipse cx="256" cy="256" rx="140" ry="60" fill="#61dafb" opacity="0.8" transform="rotate(-30 256 256)"/>
+  <ellipse cx="256" cy="256" rx="140" ry="60" fill="#61dafb" opacity="0.8" transform="rotate(30 256 256)"/>
+  <ellipse cx="256" cy="256" rx="140" ry="60" fill="#61dafb" opacity="0.8" transform="rotate(90 256 256)"/>
+  <circle cx="256" cy="256" r="40" fill="#0f172a"/>
+  <rect x="226" y="156" width="60" height="200" rx="8" fill="#61dafb" opacity="0.9"/>
+  <circle cx="256" cy="156" r="20" fill="#0f172a"/>
+  <text x="256" y="480" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">REMOTION</text>
+</svg>

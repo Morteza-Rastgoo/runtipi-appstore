@@ -1,0 +1,66 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "Remotion",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 8453,
+  "id": "remotion",
+  "tipi_version": 1,
+  "version": "4.0.0",
+  "categories": ["media", "automation", "development"],
+  "description": "Remotion is a React-based framework for creating videos programmatically. Write React components to generate MP4 videos, perfect for automated social media content, dynamic video templates, and server-side video rendering without UI.",
+  "short_desc": "React-based video creation framework",
+  "author": "remotion",
+  "source": "https://github.com/remotion-dev/remotion",
+  "website": "https://www.remotion.dev/",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "API Key for authentication",
+      "max": 100,
+      "min": 10,
+      "required": true,
+      "env_variable": "API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Chrome executable path",
+      "max": 200,
+      "min": 5,
+      "required": false,
+      "env_variable": "CHROME_EXECUTABLE_PATH",
+      "hint": "Default: /usr/bin/chromium-browser"
+    },
+    {
+      "type": "text",
+      "label": "Max concurrency",
+      "max": 3,
+      "min": 1,
+      "required": false,
+      "env_variable": "MAX_CONCURRENCY",
+      "hint": "Default: 2"
+    },
+    {
+      "type": "text",
+      "label": "Output resolution width",
+      "max": 4,
+      "min": 3,
+      "required": false,
+      "env_variable": "WIDTH",
+      "hint": "Default: 1920"
+    },
+    {
+      "type": "text",
+      "label": "Output resolution height",
+      "max": 4,
+      "min": 3,
+      "required": false,
+      "env_variable": "HEIGHT",
+      "hint": "Default: 1080"
+    }
+  ],
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1749067300000,
+  "updated_at": 1749067300000
+}

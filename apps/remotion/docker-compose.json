@@ -1,0 +1,38 @@
+{
+  "services": {
+    "remotion": {
+      "image": "remotion/remotion:latest",
+      "container_name": "remotion",
+      "restart": "unless-stopped",
+      "environment": [
+        "REMOTION_API_KEY=${REMOTION_API_KEY}",
+        "REMOTION_CHROME_EXECUTABLE=${REMOTION_CHROME_EXECUTABLE:-/usr/bin/google-chrome}",
+        "REMOTION_MAX_CONCURRENCY=${REMOTION_MAX_CONCURRENCY:-4}",
+        "REMOTION_OUTPUT_WIDTH=${REMOTION_OUTPUT_WIDTH:-1920}",
+        "REMOTION_OUTPUT_HEIGHT=${REMOTION_OUTPUT_HEIGHT:-1080}"
+      ],
+      "volumes": [
+        "${APP_DATA_DIR}/data:/app/data",
+        "${APP_DATA_DIR}/output:/app/output",
+        "${APP_DATA_DIR}/projects:/app/projects"
+      ],
+      "ports": [
+        "${APP_PORT}:3000"
+      ],
+      "networks": ["tipi_main_network"],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.remotion.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.remotion.entrypoints": "websecure",
+        "traefik.http.routers.remotion.tls.certresolver": "myresolver",
+        "traefik.http.services.remotion.loadbalancer.server.port": "3000",
+        "runtipi.managed": "true"
+      }
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "external": true
+    }
+  }
+}

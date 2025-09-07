@@ -1,0 +1,66 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "OpenShot",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 8454,
+  "id": "openshot",
+  "tipi_version": 1,
+  "version": "3.1.1",
+  "categories": ["media", "automation"],
+  "description": "OpenShot is an award-winning free and open-source video editor with a powerful Python API. Create and edit videos programmatically with timeline-based editing, transitions, effects, and automation capabilities.",
+  "short_desc": "Python video editor with API",
+  "author": "OpenShot",
+  "source": "https://github.com/OpenShot/openshot-qt",
+  "website": "https://www.openshot.org/",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "API Key for authentication",
+      "max": 100,
+      "min": 10,
+      "required": true,
+      "env_variable": "API_KEY"
+    },
+    {
+      "type": "text",
+      "label": "Max file upload size (MB)",
+      "max": 4,
+      "min": 1,
+      "required": false,
+      "env_variable": "MAX_UPLOAD_SIZE",
+      "hint": "Default: 500"
+    },
+    {
+      "type": "text",
+      "label": "Output resolution width",
+      "max": 4,
+      "min": 3,
+      "required": false,
+      "env_variable": "WIDTH",
+      "hint": "Default: 1920"
+    },
+    {
+      "type": "text",
+      "label": "Output resolution height",
+      "max": 4,
+      "min": 3,
+      "required": false,
+      "env_variable": "HEIGHT",
+      "hint": "Default: 1080"
+    },
+    {
+      "type": "text",
+      "label": "Frame rate",
+      "max": 3,
+      "min": 1,
+      "required": false,
+      "env_variable": "FRAMERATE",
+      "hint": "Default: 30"
+    }
+  ],
+  "supported_architectures": ["amd64"],
+  "created_at": 1749067400000,
+  "updated_at": 1749067400000
+}

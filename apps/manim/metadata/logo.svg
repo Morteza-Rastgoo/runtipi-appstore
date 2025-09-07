@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#1e293b"/>
+  <circle cx="256" cy="200" r="80" fill="none" stroke="#3b82f6" stroke-width="8"/>
+  <path d="M176,200 Q256,120 336,200 Q256,280 176,200" fill="none" stroke="#3b82f6" stroke-width="6"/>
+  <circle cx="216" cy="180" r="12" fill="#ef4444"/>
+  <circle cx="296" cy="180" r="12" fill="#ef4444"/>
+  <text x="256" y="320" text-anchor="middle" fill="#3b82f6" font-family="serif" font-size="48" font-weight="bold">∑</text>
+  <text x="256" y="480" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">MANIM</text>
+</svg>

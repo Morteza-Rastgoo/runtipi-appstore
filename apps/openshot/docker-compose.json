@@ -1,0 +1,44 @@
+{
+  "services": {
+    "openshot": {
+      "image": "jlesage/openshot:v3.1.1",
+      "container_name": "openshot",
+      "restart": "unless-stopped",
+      "environment": [
+        "USER_ID=${PUID:-1000}",
+        "GROUP_ID=${PGID:-1000}",
+        "TZ=${TZ:-UTC}",
+        "KEEP_APP_RUNNING=1",
+        "DISPLAY_WIDTH=${DISPLAY_WIDTH:-1920}",
+        "DISPLAY_HEIGHT=${DISPLAY_HEIGHT:-1080}",
+        "OPENSHOT_API_KEY=${OPENSHOT_API_KEY}",
+        "OPENSHOT_MAX_UPLOAD_SIZE=${OPENSHOT_MAX_UPLOAD_SIZE:-100M}",
+        "OPENSHOT_OUTPUT_WIDTH=${OPENSHOT_OUTPUT_WIDTH:-1920}",
+        "OPENSHOT_OUTPUT_HEIGHT=${OPENSHOT_OUTPUT_HEIGHT:-1080}",
+        "OPENSHOT_FRAME_RATE=${OPENSHOT_FRAME_RATE:-30}"
+      ],
+      "volumes": [
+        "${APP_DATA_DIR}/data/config:/config",
+        "${APP_DATA_DIR}/data/projects:/storage/projects",
+        "${APP_DATA_DIR}/data/media:/storage/media"
+      ],
+      "ports": [
+        "${APP_PORT}:5800"
+      ],
+      "networks": ["tipi_main_network"],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.openshot.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.openshot.entrypoints": "websecure",
+        "traefik.http.routers.openshot.tls.certresolver": "myresolver",
+        "traefik.http.services.openshot.loadbalancer.server.port": "5800",
+        "runtipi.managed": "true"
+      }
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "external": true
+    }
+  }
+}

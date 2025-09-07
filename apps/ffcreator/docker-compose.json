@@ -1,0 +1,39 @@
+{
+  "services": {
+    "ffcreator": {
+      "image": "node:18-alpine",
+      "container_name": "ffcreator",
+      "restart": "unless-stopped",
+      "working_dir": "/app",
+      "command": "sh -c 'npm install -g ffcreator && npm start'",
+      "environment": [
+        "NODE_ENV=production",
+        "FFCREATOR_PORT=${FFCREATOR_PORT:-3000}",
+        "FFCREATOR_MAX_CONCURRENCY=${FFCREATOR_MAX_CONCURRENCY:-4}",
+        "FFCREATOR_OUTPUT_QUALITY=${FFCREATOR_OUTPUT_QUALITY:-high}"
+      ],
+      "volumes": [
+        "${APP_DATA_DIR}/data:/app/data",
+        "${APP_DATA_DIR}/output:/app/output",
+        "${APP_DATA_DIR}/temp:/app/temp"
+      ],
+      "ports": [
+        "${APP_PORT}:3000"
+      ],
+      "networks": ["tipi_main_network"],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.ffcreator.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.ffcreator.entrypoints": "websecure",
+        "traefik.http.routers.ffcreator.tls.certresolver": "myresolver",
+        "traefik.http.services.ffcreator.loadbalancer.server.port": "3000",
+        "runtipi.managed": "true"
+      }
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "external": true
+    }
+  }
+}

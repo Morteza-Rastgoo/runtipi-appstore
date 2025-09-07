@@ -1,0 +1,40 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "Natron",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 8450,
+  "id": "natron",
+  "tipi_version": 1,
+  "version": "2.5.0",
+  "categories": ["media", "development"],
+  "description": "Natron is a free, open-source video compositor that offers powerful node-based compositing similar to Adobe After Effects and Nuke. It provides professional-grade video effects, color correction, and motion graphics capabilities.",
+  "short_desc": "Open-source video compositing software",
+  "author": "NatronGitHub",
+  "source": "https://github.com/NatronGitHub/Natron",
+  "website": "https://natrongithub.github.io/",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Display width",
+      "max": 4,
+      "min": 3,
+      "required": false,
+      "env_variable": "DISPLAY_WIDTH",
+      "hint": "Default: 1280"
+    },
+    {
+      "type": "text",
+      "label": "Display height",
+      "max": 4,
+      "min": 3,
+      "required": false,
+      "env_variable": "DISPLAY_HEIGHT",
+      "hint": "Default: 720"
+    }
+  ],
+  "supported_architectures": ["amd64"],
+  "created_at": 1749067000000,
+  "updated_at": 1749067000000
+}

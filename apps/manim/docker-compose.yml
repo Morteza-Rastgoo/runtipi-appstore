@@ -1,0 +1,45 @@
+services:
+  manim:
+    container_name: manim
+    image: manimcommunity/manim:v0.18.1
+    restart: unless-stopped
+    ports:
+      - ${APP_PORT}:8888
+    volumes:
+      - ${APP_DATA_DIR}/data:/workspace:rw
+      - ${APP_DATA_DIR}/media:/media:rw
+    environment:
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-manim}
+      - JUPYTER_ENABLE_LAB=yes
+      - QUALITY=${QUALITY:-high_quality}
+      - OUTPUT_FORMAT=${OUTPUT_FORMAT:-mp4}
+      - TZ=${TZ}
+    working_dir: /workspace
+    command: jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=${JUPYTER_TOKEN:-manim}
+    networks:
+      - tipi_main_network
+    labels:
+      traefik.enable: true
+      traefik.http.middlewares.manim-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.manim.loadbalancer.server.port: 8888
+      traefik.http.routers.manim-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.manim-insecure.entrypoints: web
+      traefik.http.routers.manim-insecure.service: manim
+      traefik.http.routers.manim-insecure.middlewares: manim-web-redirect
+      traefik.http.routers.manim.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.manim.entrypoints: websecure
+      traefik.http.routers.manim.service: manim
+      traefik.http.routers.manim.tls.certresolver: myresolver
+      traefik.http.routers.manim-local-insecure.rule: Host(`manim.${LOCAL_DOMAIN}`)
+      traefik.http.routers.manim-local-insecure.entrypoints: web
+      traefik.http.routers.manim-local-insecure.service: manim
+      traefik.http.routers.manim-local-insecure.middlewares: manim-web-redirect
+      traefik.http.routers.manim-local.rule: Host(`manim.${LOCAL_DOMAIN}`)
+      traefik.http.routers.manim-local.entrypoints: websecure
+      traefik.http.routers.manim-local.service: manim
+      traefik.http.routers.manim-local.tls: true
+      runtipi.managed: true
+
+networks:
+  tipi_main_network:
+    external: true
