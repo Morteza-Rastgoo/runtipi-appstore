@@ -6,7 +6,7 @@
   "port": 8002,
   "id": "nca-toolkit",
   "description": "No-Code Architects Toolkit - A comprehensive AI toolkit for automation and workflows",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "latest",
   "categories": [
     "automation",
