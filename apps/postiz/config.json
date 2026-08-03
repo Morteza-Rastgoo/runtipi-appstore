@@ -1,0 +1,36 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "postiz",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 4007,
+  "id": "postiz",
+  "tipi_version": 21,
+  "version": "1.0.0",
+  "categories": ["social-media", "ai", "productivity"],
+  "description": "Postiz is the ultimate AI-powered social media scheduling platform. An alternative to Buffer, Hypefury, Twitter Hunter, and more. Manage your social media posts, build an audience, capture leads, and grow your business — all with a powerful CLI perfect for cc-local, OpenClaw, and other AI agents.",
+  "short_desc": "AI-powered social media scheduling platform with CLI for AI agents",
+  "author": "Mohammad Reza Rastgoo",
+  "source": "https://github.com/gitroomhq/postiz-app",
+  "website": "https://postiz.com",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "JWT Secret",
+      "min": 32,
+      "env_variable": "POSTIZ_JWT_SECRET"
+    },
+    {
+      "type": "text",
+      "label": "Main URL",
+      "hint": "URL to access Postiz (e.g., http://localhost:4007 or https://postiz.yourdomain.com)",
+      "env_variable": "MAIN_URL",
+      "required": false,
+      "default": "http://localhost:4007"
+    }
+  ],
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1754227200000,
+  "updated_at": 1754227200000
+}
