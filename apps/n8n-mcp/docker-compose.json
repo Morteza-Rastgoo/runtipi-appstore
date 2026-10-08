@@ -7,9 +7,12 @@
       "isMain": true,
       "internalPort": 8216,
       "environment": {
-        "N8N_BASE_URL": "${N8N_BASE_URL}",
-        "N8N_API_TOKEN": "${N8N_API_TOKEN}",
-        "SERVER_PORT": "${SERVER_PORT:-8216}"
+        "MCP_MODE": "http",
+        "PORT": "${SERVER_PORT:-8216}",
+        "AUTH_TOKEN": "${N8N_MCP_AUTH_TOKEN}",
+        "N8N_API_URL": "${N8N_BASE_URL}",
+        "N8N_API_KEY": "${N8N_API_TOKEN}",
+        "TRUST_PROXY": "1"
       },
       "healthCheck": {
         "test": "curl -f http://localhost:${SERVER_PORT:-8216}/health",
