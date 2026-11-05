@@ -8,7 +8,7 @@
   "id": "manim",
   "tipi_version": 1,
   "version": "0.18.1",
-  "categories": ["media", "education", "development"],
+  "categories": ["media", "development"],
   "description": "Manim is a Python library for creating mathematical animations and educational videos. Originally created by 3Blue1Brown for explanatory math videos, it's perfect for creating animated educational content with text morphing, mathematical formulas, and geometric animations.",
   "short_desc": "Mathematical animation engine",
   "author": "3b1b",

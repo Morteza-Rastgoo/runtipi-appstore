@@ -8,7 +8,7 @@
   "id": "postiz",
   "tipi_version": 21,
   "version": "1.0.0",
-  "categories": ["social-media", "ai", "productivity"],
+  "categories": ["social", "ai", "utilities"],
   "description": "Postiz is the ultimate AI-powered social media scheduling platform. An alternative to Buffer, Hypefury, Twitter Hunter, and more. Manage your social media posts, build an audience, capture leads, and grow your business — all with a powerful CLI perfect for cc-local, OpenClaw, and other AI agents.",
   "short_desc": "AI-powered social media scheduling platform with CLI for AI agents",
   "author": "Mohammad Reza Rastgoo",
