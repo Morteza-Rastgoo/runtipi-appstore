@@ -1,0 +1,50 @@
+{
+  "services": {
+    "cloudflare-os": {
+      "image": "cloudflare-os:local",
+      "container_name": "cloudflare-os",
+      "restart": "unless-stopped",
+      "init": true,
+      "stdin_open": true,
+      "tty": true,
+      "environment": {
+        "DEV_LISTEN_IP": "0.0.0.0",
+        "PUBLIC_ORIGIN": "${PUBLIC_ORIGIN}",
+        "AUTH_GATEKEEPERS": "${AUTH_GATEKEEPERS}",
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+        "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}",
+        "GITHUB_CLIENT_ID": "${GITHUB_CLIENT_ID}",
+        "GITHUB_CLIENT_SECRET": "${GITHUB_CLIENT_SECRET}",
+        "GITLAB_CLIENT_ID": "${GITLAB_CLIENT_ID}",
+        "GITLAB_CLIENT_SECRET": "${GITLAB_CLIENT_SECRET}",
+        "CLOUDFLARE_OAUTH_CLIENT_ID": "${CLOUDFLARE_OAUTH_CLIENT_ID}",
+        "CLOUDFLARE_OAUTH_CLIENT_SECRET": "${CLOUDFLARE_OAUTH_CLIENT_SECRET}",
+        "LINEAR_CLIENT_ID": "${LINEAR_CLIENT_ID}",
+        "LINEAR_CLIENT_SECRET": "${LINEAR_CLIENT_SECRET}",
+        "NOTION_CLIENT_ID": "${NOTION_CLIENT_ID}",
+        "NOTION_CLIENT_SECRET": "${NOTION_CLIENT_SECRET}",
+        "SPOTIFY_CLIENT_ID": "${SPOTIFY_CLIENT_ID}",
+        "SPOTIFY_CLIENT_SECRET": "${SPOTIFY_CLIENT_SECRET}",
+        "SUPABASE_CLIENT_ID": "${SUPABASE_CLIENT_ID}",
+        "SUPABASE_CLIENT_SECRET": "${SUPABASE_CLIENT_SECRET}"
+      },
+      "volumes": [
+        "${APP_DATA_DIR}/state:/app/.wrangler/state"
+      ],
+      "healthcheck": {
+        "test": ["CMD", "curl", "-f", "http://localhost:8787/"],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 5,
+        "start_period": "180s"
+      },
+      "x-runtipi": {
+        "is_main": true,
+        "internal_port": 8787
+      }
+    }
+  },
+  "x-runtipi": {
+    "schema_version": 2
+  }
+}
