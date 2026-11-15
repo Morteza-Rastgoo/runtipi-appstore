@@ -3,7 +3,7 @@
   "services": [
     {
       "name": "n8n-mcp",
-      "image": "ghcr.io/czlonkowski/n8n-mcp:latest",
+      "image": "ghcr.io/czlonkowski/n8n-mcp@sha256:c88604de94dadf5595b7419895d4130d80370bf3500674a2cd568f4bcbd70555",
       "isMain": true,
       "internalPort": 8216,
       "environment": {

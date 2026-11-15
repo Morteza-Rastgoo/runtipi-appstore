@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "teddit",
-      "image": "teddit/teddit:latest",
+      "image": "teddit/teddit@sha256:00a5c4f558592d5ef7be7c918cc8965296745a24a54c9bb215884baa31df0fea",
       "isMain": true,
       "internalPort": 8080,
       "environment": {

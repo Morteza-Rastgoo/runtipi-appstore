@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "obsidian",
-      "image": "lscr.io/linuxserver/obsidian:latest",
+      "image": "lscr.io/linuxserver/obsidian:1.15.0",
       "isMain": true,
       "internalPort": 3001,
       "environment": [
