@@ -1,12 +1,11 @@
 {
   "services": {
     "remotion": {
-      "image": "remotion/remotion:latest",
+      "image": "neostry/remotion-api:v1.10.0",
       "container_name": "remotion",
       "restart": "unless-stopped",
       "environment": [
-        "REMOTION_API_KEY=${REMOTION_API_KEY}",
-        "REMOTION_CHROME_EXECUTABLE=${REMOTION_CHROME_EXECUTABLE:-/usr/bin/google-chrome}",
+        "PORT=3000",
         "REMOTION_MAX_CONCURRENCY=${REMOTION_MAX_CONCURRENCY:-4}",
         "REMOTION_OUTPUT_WIDTH=${REMOTION_OUTPUT_WIDTH:-1920}",
         "REMOTION_OUTPUT_HEIGHT=${REMOTION_OUTPUT_HEIGHT:-1080}"
@@ -25,7 +24,10 @@
         "traefik.http.routers.remotion.rule": "Host(`${APP_DOMAIN}`)",
         "traefik.http.routers.remotion.entrypoints": "websecure",
         "traefik.http.routers.remotion.tls.certresolver": "myresolver",
+        "traefik.http.routers.remotion.middlewares": "runtipi",
         "traefik.http.services.remotion.loadbalancer.server.port": "3000",
+        "traefik.http.middlewares.remotion-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
+        "traefik.http.services.remotion.middlewares": "remotion-noindex",
         "runtipi.managed": "true"
       }
     }
