@@ -1,0 +1,36 @@
+{
+  "services": {
+    "open-whisper": {
+      "image": "ghcr.io/vocahq/vocalinux:latest",
+      "container_name": "open-whisper",
+      "restart": "unless-stopped",
+      "ports": [
+        "${APP_PORT}:8080"
+      ],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.open-whisper.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.open-whisper.entrypoints": "websecure",
+        "traefik.http.routers.open-whisper.tls.certresolver": "myresolver",
+        "traefik.http.routers.open-whisper.middlewares": "runtipi",
+        "traefik.http.services.open-whisper.loadbalancer.server.port": "8080",
+        "traefik.http.middlewares.open-whisper-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
+        "traefik.http.services.open-whisper.middlewares": "open-whisper-noindex",
+        "runtipi.managed": "true"
+      },
+      "x-runtipi": {
+        "is_main": true,
+        "internal_port": 8080
+      },
+      "networks": [
+        "tipi_main_network"
+      ]
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "name": "runtipi_tipi_main_network",
+      "external": true
+    }
+  }
+}

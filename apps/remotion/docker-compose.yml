@@ -1,45 +1,31 @@
 services:
   remotion:
+    image: neostry/remotion-api:v1.10.0
     container_name: remotion
-    image: remotion/remotion:latest
     restart: unless-stopped
-    ports:
-      - ${APP_PORT}:3000
-    volumes:
-      - ${APP_DATA_DIR}/data:/app:rw
-      - ${APP_DATA_DIR}/output:/output:rw
     environment:
-      - API_KEY=${API_KEY}
-      - CHROME_EXECUTABLE_PATH=${CHROME_EXECUTABLE_PATH:-/usr/bin/chromium-browser}
-      - MAX_CONCURRENCY=${MAX_CONCURRENCY:-2}
-      - WIDTH=${WIDTH:-1920}
-      - HEIGHT=${HEIGHT:-1080}
-      - NODE_ENV=production
-      - TZ=${TZ}
+    - PORT=3000
+    - REMOTION_MAX_CONCURRENCY=${REMOTION_MAX_CONCURRENCY:-4}
+    - REMOTION_OUTPUT_WIDTH=${REMOTION_OUTPUT_WIDTH:-1920}
+    - REMOTION_OUTPUT_HEIGHT=${REMOTION_OUTPUT_HEIGHT:-1080}
+    volumes:
+    - ${APP_DATA_DIR}/data:/app/data
+    - ${APP_DATA_DIR}/output:/app/output
+    - ${APP_DATA_DIR}/projects:/app/projects
+    ports:
+    - ${APP_PORT}:3000
     networks:
-      - tipi_main_network
+    - tipi_main_network
     labels:
-      traefik.enable: true
-      traefik.http.middlewares.remotion-web-redirect.redirectscheme.scheme: https
-      traefik.http.services.remotion.loadbalancer.server.port: 3000
-      traefik.http.routers.remotion-insecure.rule: Host(`${APP_DOMAIN}`)
-      traefik.http.routers.remotion-insecure.entrypoints: web
-      traefik.http.routers.remotion-insecure.service: remotion
-      traefik.http.routers.remotion-insecure.middlewares: remotion-web-redirect
+      traefik.enable: 'true'
       traefik.http.routers.remotion.rule: Host(`${APP_DOMAIN}`)
       traefik.http.routers.remotion.entrypoints: websecure
-      traefik.http.routers.remotion.service: remotion
       traefik.http.routers.remotion.tls.certresolver: myresolver
-      traefik.http.routers.remotion-local-insecure.rule: Host(`remotion.${LOCAL_DOMAIN}`)
-      traefik.http.routers.remotion-local-insecure.entrypoints: web
-      traefik.http.routers.remotion-local-insecure.service: remotion
-      traefik.http.routers.remotion-local-insecure.middlewares: remotion-web-redirect
-      traefik.http.routers.remotion-local.rule: Host(`remotion.${LOCAL_DOMAIN}`)
-      traefik.http.routers.remotion-local.entrypoints: websecure
-      traefik.http.routers.remotion-local.service: remotion
-      traefik.http.routers.remotion-local.tls: true
-      runtipi.managed: true
-
+      traefik.http.routers.remotion.middlewares: runtipi
+      traefik.http.services.remotion.loadbalancer.server.port: '3000'
+      traefik.http.middlewares.remotion-noindex.headers.customResponseHeaders.X-Robots-Tag: noindex, nofollow
+      traefik.http.services.remotion.middlewares: remotion-noindex
+      runtipi.managed: 'true'
 networks:
   tipi_main_network:
     external: true

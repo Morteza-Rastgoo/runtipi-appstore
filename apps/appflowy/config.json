@@ -1,0 +1,67 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "appflowy",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 3011,
+  "id": "appflowy",
+  "tipi_version": 21,
+  "version": "1.0.0",
+  "categories": [
+    "productivity",
+    "ai"
+  ],
+  "description": "AppFlowy is an open-source, self-hosted collaborative productivity workspace for notes, tasks, and databases, with AI. A self-hosted alternative to Notion and Coda. This is the full AppFlowy Cloud stack (web, API, auth, search, AI, object storage).",
+  "short_desc": "Self-hosted collaborative workspace — a Notion alternative",
+  "author": "Mohammad Reza Rastgoo",
+  "source": "https://github.com/AppFlowy-IO/AppFlowy-Cloud",
+  "website": "https://appflowy.com/",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Admin Email",
+      "env_variable": "GOTRUE_ADMIN_EMAIL",
+      "required": true
+    },
+    {
+      "type": "password",
+      "label": "Admin Password",
+      "env_variable": "GOTRUE_ADMIN_PASSWORD",
+      "required": true
+    },
+    {
+      "type": "random",
+      "label": "JWT Secret",
+      "min": 32,
+      "env_variable": "GOTRUE_JWT_SECRET"
+    },
+    {
+      "type": "text",
+      "label": "Postgres Password",
+      "env_variable": "POSTGRES_PASSWORD",
+      "required": true,
+      "default": "password"
+    },
+    {
+      "type": "text",
+      "label": "S3 Access Key",
+      "env_variable": "APPFLOWY_S3_ACCESS_KEY",
+      "required": true,
+      "default": "minioadmin"
+    },
+    {
+      "type": "text",
+      "label": "S3 Secret Key",
+      "env_variable": "APPFLOWY_S3_SECRET_KEY",
+      "required": true,
+      "default": "minioadmin"
+    }
+  ],
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1763200000000,
+  "updated_at": 1763200000000
+}

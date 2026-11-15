@@ -1,0 +1,55 @@
+services:
+  cal-diy:
+    image: "calcom/cal.com:latest"
+    container_name: cal-diy
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "postgresql://cal:${POSTGRES_PASSWORD:-cal}@cal-diy-postgres:5432/cal"
+      NEXTAUTH_SECRET: "${NEXTAUTH_SECRET}"
+      NEXTAUTH_URL: "https://${APP_DOMAIN}"
+    ports:
+      - "${APP_PORT}:3000"
+    depends_on:
+      cal-diy-postgres:
+        condition: service_healthy
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cal-diy.rule: "Host(`${APP_DOMAIN}`)"
+      traefik.http.routers.cal-diy.entrypoints: websecure
+      traefik.http.routers.cal-diy.tls.certresolver: myresolver
+      traefik.http.routers.cal-diy.middlewares: runtipi
+      traefik.http.services.cal-diy.loadbalancer.server.port: 3000
+      traefik.http.middlewares.cal-diy-noindex.headers.customResponseHeaders.X-Robots-Tag: "noindex, nofollow"
+      traefik.http.services.cal-diy.middlewares: cal-diy-noindex
+      runtipi.managed: "true"
+    x-runtipi:
+      is_main: true
+      internal_port: 3000
+    networks:
+      - tipi_main_network
+  cal-diy-postgres:
+    image: "postgres:15"
+    container_name: cal-diy-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cal
+      POSTGRES_USER: cal
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-cal}"
+    volumes:
+      - "cal-diy-pg-data:/var/lib/postgresql/data"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U cal -d cal
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - tipi_main_network
+volumes:
+  cal-diy-pg-data:
+    driver: local
+networks:
+  tipi_main_network:
+    name: runtipi_tipi_main_network
+    external: true

@@ -1,0 +1,39 @@
+{
+  "services": {
+    "open-generative-ai": {
+      "image": "0xcafebebe/open-generative-ai:latest",
+      "container_name": "open-generative-ai",
+      "restart": "unless-stopped",
+      "environment": {
+        "NODE_ENV": "production"
+      },
+      "ports": [
+        "${APP_PORT}:3000"
+      ],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.open-generative-ai.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.open-generative-ai.entrypoints": "websecure",
+        "traefik.http.routers.open-generative-ai.tls.certresolver": "myresolver",
+        "traefik.http.routers.open-generative-ai.middlewares": "runtipi",
+        "traefik.http.services.open-generative-ai.loadbalancer.server.port": "3000",
+        "traefik.http.middlewares.open-generative-ai-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
+        "traefik.http.services.open-generative-ai.middlewares": "open-generative-ai-noindex",
+        "runtipi.managed": "true"
+      },
+      "x-runtipi": {
+        "is_main": true,
+        "internal_port": 3000
+      },
+      "networks": [
+        "tipi_main_network"
+      ]
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "name": "runtipi_tipi_main_network",
+      "external": true
+    }
+  }
+}

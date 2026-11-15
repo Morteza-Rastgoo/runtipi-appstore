@@ -1,60 +1,37 @@
-version: "3.7"
 services:
   nca-toolkit:
+    image: stephengpope/no-code-architects-toolkit:1.1.3
     container_name: nca-toolkit
-    image: ghcr.io/no-code-architects/no-code-architects-toolkit:latest
-    ports:
-      - ${APP_PORT}:8080
-    environment:
-      - API_KEY=${API_KEY}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}
-      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
-      - S3_SECRET_KEY=${S3_SECRET_KEY}
-      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
-      - S3_REGION=${S3_REGION}
-      - GCP_SA_CREDENTIALS=${GCP_SA_CREDENTIALS}
-      - GCP_BUCKET_NAME=${GCP_BUCKET_NAME}
-      - LOCAL_STORAGE_PATH=${LOCAL_STORAGE_PATH:-/app/data}
-      - MAX_QUEUE_LENGTH=${MAX_QUEUE_LENGTH:-0}
-      - GUNICORN_WORKERS=${GUNICORN_WORKERS}
-      - GUNICORN_TIMEOUT=${GUNICORN_TIMEOUT:-300}
-      - PORT=8080
-    volumes:
-      - ${APP_DATA_DIR}/data:/app/data
-    networks:
-      - tipi_main_network
     restart: unless-stopped
+    environment:
+    - PUID=${PUID:-1000}
+    - PGID=${PGID:-1000}
+    - TZ=${TZ:-UTC}
+    volumes:
+    - ${APP_DATA_DIR}/data:/data
+    ports:
+    - ${APP_PORT}:8080
+    networks:
+    - tipi_main_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/toolkit/test"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8080/health
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
     labels:
-      traefik.enable: true
-      traefik.http.middlewares.nca-toolkit-web-redirect.redirectscheme.scheme: https
-      traefik.http.services.nca-toolkit.loadbalancer.server.port: 8080
-      traefik.http.routers.nca-toolkit-insecure.rule: Host(`${APP_DOMAIN}`)
-      traefik.http.routers.nca-toolkit-insecure.entrypoints: web
-      traefik.http.routers.nca-toolkit-insecure.service: nca-toolkit
-      traefik.http.routers.nca-toolkit-insecure.middlewares: nca-toolkit-web-redirect
+      traefik.enable: 'true'
       traefik.http.routers.nca-toolkit.rule: Host(`${APP_DOMAIN}`)
       traefik.http.routers.nca-toolkit.entrypoints: websecure
-      traefik.http.routers.nca-toolkit.service: nca-toolkit
       traefik.http.routers.nca-toolkit.tls.certresolver: myresolver
-      traefik.http.routers.nca-toolkit-local-insecure.rule: Host(`nca-toolkit.${LOCAL_DOMAIN}`)
-      traefik.http.routers.nca-toolkit-local-insecure.entrypoints: web
-      traefik.http.routers.nca-toolkit-local-insecure.service: nca-toolkit
-      traefik.http.routers.nca-toolkit-local-insecure.middlewares: nca-toolkit-web-redirect
-      traefik.http.routers.nca-toolkit-local.rule: Host(`nca-toolkit.${LOCAL_DOMAIN}`)
-      traefik.http.routers.nca-toolkit-local.entrypoints: websecure
-      traefik.http.routers.nca-toolkit-local.service: nca-toolkit
-      traefik.http.routers.nca-toolkit-local.tls: true
-      runtipi.managed: true
-
+      traefik.http.routers.nca-toolkit.middlewares: runtipi
+      traefik.http.services.nca-toolkit.loadbalancer.server.port: '8080'
+      traefik.http.middlewares.nca-toolkit-noindex.headers.customResponseHeaders.X-Robots-Tag: noindex, nofollow
+      traefik.http.services.nca-toolkit.middlewares: nca-toolkit-noindex
+      runtipi.managed: 'true'
 networks:
   tipi_main_network:
     external: true

@@ -1,0 +1,26 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "open-whisper",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 3006,
+  "id": "open-whisper",
+  "tipi_version": 21,
+  "version": "1.0.0",
+  "categories": [
+    "ai",
+    "utilities"
+  ],
+  "description": "Open Whisper (Vocalinux) is a self-hosted speech-to-text studio built on Whisper. Transcribe and edit audio with open models. A self-hosted alternative to Whisperflow.",
+  "short_desc": "Self-hosted speech-to-text studio — a Whisperflow alternative",
+  "author": "Mohammad Reza Rastgoo",
+  "source": "https://github.com/vocahq",
+  "website": "https://github.com/vocahq",
+  "form_fields": [],
+  "supported_architectures": [
+    "amd64"
+  ],
+  "created_at": 1763200000000,
+  "updated_at": 1763200000000
+}

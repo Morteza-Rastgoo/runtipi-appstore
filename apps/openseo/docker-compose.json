@@ -1,0 +1,56 @@
+{
+  "services": {
+    "openseo": {
+      "image": "ghcr.io/every-app/open-seo-standalone:latest",
+      "container_name": "openseo",
+      "restart": "unless-stopped",
+      "environment": {
+        "CLOUDFLARE_INCLUDE_PROCESS_ENV": "true",
+        "PORT": "3001",
+        "ALLOWED_HOST": "${APP_DOMAIN}",
+        "AUTH_MODE": "local_noauth",
+        "DATAFORSEO_API_KEY": "${DATAFORSEO_API_KEY:-}",
+        "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY:-}",
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID:-}",
+        "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET:-}",
+        "BETTER_AUTH_SECRET": "${BETTER_AUTH_SECRET}",
+        "VITE_SHOW_DEVTOOLS": "false"
+      },
+      "ports": [
+        "${APP_PORT}:3001"
+      ],
+      "volumes": [
+        "open_seo_data:/app/.wrangler"
+      ],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.openseo.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.openseo.entrypoints": "websecure",
+        "traefik.http.routers.openseo.tls.certresolver": "myresolver",
+        "traefik.http.routers.openseo.middlewares": "runtipi",
+        "traefik.http.services.openseo.loadbalancer.server.port": "3001",
+        "traefik.http.middlewares.openseo-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
+        "traefik.http.services.openseo.middlewares": "openseo-noindex",
+        "runtipi.managed": "true"
+      },
+      "x-runtipi": {
+        "is_main": true,
+        "internal_port": 3001
+      },
+      "networks": [
+        "tipi_main_network"
+      ]
+    }
+  },
+  "volumes": {
+    "open_seo_data": {
+      "driver": "local"
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "name": "runtipi_tipi_main_network",
+      "external": true
+    }
+  }
+}

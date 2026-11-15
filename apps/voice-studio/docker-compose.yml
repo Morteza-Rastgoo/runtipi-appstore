@@ -1,0 +1,37 @@
+services:
+  voice-studio:
+    image: "ghcr.io/debpalash/voicestudio:stable"
+    container_name: voice-studio
+    restart: unless-stopped
+    environment:
+      HF_HOME: /app/omnivoice_data/huggingface
+      OMNIVOICE_DATA_DIR: /app/omnivoice_data
+      PYTHONPATH: /app/backend
+      PYTHONUNBUFFERED: 1
+      OMNIVOICE_CORS_ORIGINS: "*"
+    ports:
+      - "${APP_PORT}:3900"
+    volumes:
+      - "voice-studio-data:/app/omnivoice_data"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.voice-studio.rule: "Host(`${APP_DOMAIN}`)"
+      traefik.http.routers.voice-studio.entrypoints: websecure
+      traefik.http.routers.voice-studio.tls.certresolver: myresolver
+      traefik.http.routers.voice-studio.middlewares: runtipi
+      traefik.http.services.voice-studio.loadbalancer.server.port: 3900
+      traefik.http.middlewares.voice-studio-noindex.headers.customResponseHeaders.X-Robots-Tag: "noindex, nofollow"
+      traefik.http.services.voice-studio.middlewares: voice-studio-noindex
+      runtipi.managed: "true"
+    x-runtipi:
+      is_main: true
+      internal_port: 3900
+    networks:
+      - tipi_main_network
+volumes:
+  voice-studio-data:
+    driver: local
+networks:
+  tipi_main_network:
+    name: runtipi_tipi_main_network
+    external: true

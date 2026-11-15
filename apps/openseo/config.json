@@ -1,0 +1,46 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "openseo",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 3009,
+  "id": "openseo",
+  "tipi_version": 21,
+  "version": "1.0.0",
+  "categories": [
+    "marketing",
+    "utilities"
+  ],
+  "description": "Open SEO is an open-source, self-hosted SEO platform for rank tracking, site audits, and analytics. A self-hosted alternative to SEMrush and Ahrefs.",
+  "short_desc": "Self-hosted SEO analytics & rank tracking — a SEMrush alternative",
+  "author": "Mohammad Reza Rastgoo",
+  "source": "https://github.com/every-app/open-seo",
+  "website": "https://github.com/every-app/open-seo",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "DataForSEO API Key",
+      "env_variable": "DATAFORSEO_API_KEY",
+      "required": false
+    },
+    {
+      "type": "text",
+      "label": "OpenRouter API Key (SAM agent)",
+      "env_variable": "OPENROUTER_API_KEY",
+      "required": false
+    },
+    {
+      "type": "random",
+      "label": "Better Auth Secret",
+      "min": 32,
+      "env_variable": "BETTER_AUTH_SECRET"
+    }
+  ],
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1763200000000,
+  "updated_at": 1763200000000
+}
