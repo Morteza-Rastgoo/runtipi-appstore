@@ -1,7 +1,7 @@
 {
   "services": {
     "cloudflare-os": {
-      "image": "cloudflare-os:local",
+      "image": "127.0.0.1:5000/cloudflare-os:local",
       "container_name": "cloudflare-os",
       "restart": "unless-stopped",
       "init": true,

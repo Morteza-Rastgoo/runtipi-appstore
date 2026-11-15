@@ -29,4 +29,4 @@ Supported vendors: Google, GitHub, GitLab, Cloudflare, Linear, Notion, Spotify, 
 ## Notes
 
 - State (accounts, workspaces, gadgets, Durable Objects) persists in the app's data directory across restarts and updates.
-- The image is built from the [cloudflare/cloudflare-os](https://github.com/cloudflare/cloudflare-os) repository. This store entry references the locally built `cloudflare-os:local` image; build it on the host before installing if it is not already present.
+- The image is built from the [cloudflare/cloudflare-os](https://github.com/cloudflare/cloudflare-os) repository. This store entry references `127.0.0.1:5000/cloudflare-os:local`, a locally built image published to a **local Docker registry** on the host. Runtipi's install runs `docker compose down --rmi all` (which strips the image tag) before `up`, so the image must be re-pullable — a bare local tag would fail that pull. To set up: `docker run -d --name cfos-registry -p 127.0.0.1:5000:5000 registry:2`, then `docker tag cloudflare-os:local 127.0.0.1:5000/cloudflare-os:local && docker push 127.0.0.1:5000/cloudflare-os:local`.

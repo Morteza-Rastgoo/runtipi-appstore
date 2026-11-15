@@ -1,6 +1,9 @@
 services:
   cloudflare-os:
-    image: cloudflare-os:local
+    # Locally built image, published to a local registry so runtipi's
+    # `docker compose down --rmi all` (which strips the tag) is followed by a
+    # successful `up` that re-pulls it. See metadata/description.md.
+    image: 127.0.0.1:5000/cloudflare-os:local
     container_name: cloudflare-os
     restart: unless-stopped
     init: true
