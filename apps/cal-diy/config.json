@@ -9,7 +9,6 @@
   "tipi_version": 21,
   "version": "1.0.0",
   "categories": [
-    "productivity",
     "utilities"
   ],
   "description": "Cal.diy runs Cal.com, the open-source scheduling platform, self-hosted. Create booking pages, calendars, and integrations. A self-hosted alternative to Calendly.",

@@ -10,7 +10,7 @@
   "version": "1.0.0",
   "categories": [
     "media",
-    "productivity"
+    "utilities"
   ],
   "description": "Cap is an open-source, self-hosted screen-recording and video-sharing platform. Record your screen, add captions, and share. A self-hosted alternative to Loom.",
   "short_desc": "Self-hosted screen & video recording — a Loom alternative",

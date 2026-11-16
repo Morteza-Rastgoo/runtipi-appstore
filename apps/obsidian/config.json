@@ -8,7 +8,7 @@
   "id": "obsidian",
   "tipi_version": 228,
   "version": "latest",
-  "categories": ["productivity", "notes"],
+  "categories": ["utilities"],
   "description": "Obsidian is a powerful knowledge base that works on top of a local folder of plain text Markdown files. Access your notes from anywhere via browser.",
   "short_desc": "Knowledge base on local Markdown files",
   "author": "Obsidian",

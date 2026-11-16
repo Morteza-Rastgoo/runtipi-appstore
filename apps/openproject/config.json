@@ -9,7 +9,6 @@
   "tipi_version": 21,
   "version": "1.0.0",
   "categories": [
-    "productivity",
     "utilities"
   ],
   "description": "Open Project is a web-based, open-source project management and collaboration platform. Track projects, issues, time, and costs. A self-hosted alternative to Asana and Jira. The official Docker image bundles its own PostgreSQL database.",

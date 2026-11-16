@@ -9,7 +9,6 @@
   "tipi_version": 21,
   "version": "2.32.0",
   "categories": [
-    "monitoring",
     "utilities"
   ],
   "description": "sparkDash is a real-time web dashboard for one or more NVIDIA DGX Spark (GB10) machines — and any Linux/Windows/macOS unit with an NVIDIA GPU. It streams GPU, CPU, unified memory, storage, network, and local LLM metrics, and supports remote units over SSH. The image is built from source (upstream has not published a GHCR image for any release yet) and served from the local registry at 127.0.0.1:5000. The container runs privileged with host PID and read-only host mounts (/proc, /sys, /, nvidia-smi) so it can read local GPU and system metrics; host services bound to 127.0.0.1 (e.g. a local vLLM) are reachable from the dashboard via host.docker.internal.",

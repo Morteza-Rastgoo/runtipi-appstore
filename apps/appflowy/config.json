@@ -9,7 +9,7 @@
   "tipi_version": 21,
   "version": "1.0.0",
   "categories": [
-    "productivity",
+    "utilities",
     "ai"
   ],
   "description": "AppFlowy is an open-source, self-hosted collaborative productivity workspace for notes, tasks, and databases, with AI. A self-hosted alternative to Notion and Coda. This is the full AppFlowy Cloud stack (web, API, auth, search, AI, object storage).",
