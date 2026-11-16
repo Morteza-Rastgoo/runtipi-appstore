@@ -7,7 +7,7 @@
   "port": 5555,
   "id": "sparkdash",
   "tipi_version": 21,
-  "version": "2.32.0",
+  "version": "2.90.0",
   "categories": [
     "utilities"
   ],
@@ -28,5 +28,5 @@
     "amd64"
   ],
   "created_at": 1763200000000,
-  "updated_at": 1763200000000
+  "updated_at": 1794825000000
 }
