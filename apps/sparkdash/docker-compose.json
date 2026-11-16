@@ -1,0 +1,67 @@
+{
+  "services": {
+    "sparkdash": {
+      "image": "127.0.0.1:5000/sparkdash:local",
+      "container_name": "sparkdash",
+      "restart": "unless-stopped",
+      "privileged": true,
+      "pid": "host",
+      "environment": {
+        "PORT": "5555",
+        "BIND_HOST": "0.0.0.0",
+        "SPARKDASH_TOKEN": "${SPARKDASH_TOKEN:-}",
+        "TZ": "${TZ:-UTC}"
+      },
+      "extra_hosts": [
+        "host.docker.internal:host-gateway"
+      ],
+      "volumes": [
+        "/proc:/host/proc:ro",
+        "/sys:/host/sys:ro",
+        "/:/host/root:ro",
+        "/usr/bin/nvidia-smi:/usr/bin/nvidia-smi:ro",
+        "/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:ro",
+        "${APP_DATA_DIR}/config:/app/config"
+      ],
+      "ports": [
+        "${APP_PORT}:5555"
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:5555/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3,
+        "start_period": "30s"
+      },
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.sparkdash.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.sparkdash.entrypoints": "websecure",
+        "traefik.http.routers.sparkdash.tls.certresolver": "myresolver",
+        "traefik.http.routers.sparkdash.middlewares": "runtipi",
+        "traefik.http.services.sparkdash.loadbalancer.server.port": "5555",
+        "traefik.http.middlewares.sparkdash-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
+        "traefik.http.services.sparkdash.middlewares": "sparkdash-noindex",
+        "runtipi.managed": "true"
+      },
+      "x-runtipi": {
+        "is_main": true,
+        "internal_port": 5555
+      },
+      "networks": [
+        "tipi_main_network"
+      ]
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "name": "runtipi_tipi_main_network",
+      "external": true
+    }
+  }
+}
