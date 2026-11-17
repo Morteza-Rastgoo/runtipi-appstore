@@ -1,48 +1,29 @@
 {
-  "services": {
-    "openhands": {
+  "schemaVersion": 2,
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "services": [
+    {
+      "name": "openhands",
       "image": "ghcr.io/openhands/agent-canvas:1.41.0",
-      "container_name": "openhands",
+      "isMain": true,
+      "internalPort": 8000,
       "user": "1000:1000",
       "restart": "unless-stopped",
-      "environment": {
-        "HOME": "/home/openhands",
-        "XDG_CONFIG_HOME": "/home/openhands/.openhands/config",
-        "AGENT_CANVAS_BASE_PATH": "/",
-        "TZ": "${TZ}"
-      },
-      "ports": [
-        "${APP_PORT}:8000"
+      "environment": [
+        { "key": "HOME", "value": "/home/openhands" },
+        { "key": "XDG_CONFIG_HOME", "value": "/home/openhands/.openhands/config" },
+        { "key": "AGENT_CANVAS_BASE_PATH", "value": "/" },
+        { "key": "TZ", "value": "${TZ}" }
       ],
       "volumes": [
-        "/home/morteza/.openhands:/home/openhands/.openhands",
-        "/home/morteza/projects:/projects",
-        "/home/morteza/Android/Sdk:/opt/android-sdk"
+        { "hostPath": "/home/morteza/.openhands", "containerPath": "/home/openhands/.openhands" },
+        { "hostPath": "/home/morteza/projects", "containerPath": "/projects" },
+        { "hostPath": "/home/morteza/Android/Sdk", "containerPath": "/opt/android-sdk" }
       ],
-      "labels": {
-        "traefik.enable": "true",
-        "traefik.http.routers.openhands.rule": "Host(`${APP_DOMAIN}`)",
-        "traefik.http.routers.openhands.entrypoints": "websecure",
-        "traefik.http.routers.openhands.tls.certresolver": "myresolver",
-        "traefik.http.routers.openhands.middlewares": "runtipi",
-        "traefik.http.services.openhands.loadbalancer.server.port": "8000",
-        "traefik.http.middlewares.openhands-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
-        "traefik.http.services.openhands.middlewares": "openhands-noindex",
-        "runtipi.managed": "true"
-      },
-      "x-runtipi": {
-        "is_main": true,
-        "internal_port": 8000
-      },
-      "networks": [
-        "tipi_main_network"
-      ]
+      "extraLabels": {
+        "traefik.http.middlewares.{{RUNTIPI_APP_ID}}-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
+        "traefik.http.services.{{RUNTIPI_APP_ID}}.middlewares": "{{RUNTIPI_APP_ID}}-noindex"
+      }
     }
-  },
-  "networks": {
-    "tipi_main_network": {
-      "name": "runtipi_tipi_main_network",
-      "external": true
-    }
-  }
+  ]
 }
