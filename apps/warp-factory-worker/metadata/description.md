@@ -78,14 +78,19 @@ and the local Android SDK.
 
 The Docker backend uses Warp's sidecar images for the agent harness. If you want
 the harness to be the **host's own coding CLIs** instead, switch to the `direct`
-backend: install the `oz` CLI on the host, then replace the `backend:` block in
-`data/worker.yaml` with:
+backend. The **Oz CLI is already installed on this host** (`/usr/bin/oz` →
+`/opt/warpdotdev/oz-stable/oz`, package `oz-stable`). Because the worker runs in a
+container, mount the host CLI into it and point `oz_path` at it:
+
+1. Add this volume to the app (via `WARP_EXTRA_ARGS`: `-v
+   /opt/warpdotdev/oz-stable:/opt/oz:ro`).
+2. Replace the `backend:` block in `data/worker.yaml` with:
 
 ```yaml
 backend:
   direct:
     workspace_root: "/var/lib/oz/workspaces"
-    oz_path: "/usr/local/bin/oz"
+    oz_path: "/opt/oz/oz"
     environment:
       - name: ANDROID_HOME
         value: "/home/morteza/Android/Sdk"
