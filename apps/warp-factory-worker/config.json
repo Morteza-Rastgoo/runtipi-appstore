@@ -1,0 +1,51 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "Warp Factory Worker",
+  "available": true,
+  "exposable": false,
+  "no_gui": true,
+  "dynamic_config": true,
+  "id": "warp-factory-worker",
+  "tipi_version": 21,
+  "version": "v2026-11-12-16-17-15",
+  "categories": [
+    "development",
+    "automation"
+  ],
+  "description": "Self-hosted worker for Warp Factories (oz-agent-worker). Warp Factories is a cloud platform for running fleets of coding agents across your SDLC; the control plane is hosted by Warp, and this worker runs the actual agent tasks on your own infrastructure. It is a headless background daemon with no web UI: it mounts the host Docker socket so it can spawn task containers, and connects outbound over a WebSocket to Warp's Automation Platform. It requires a Warp Enterprise plan and a self-hosted worker API key (wk-...) to authenticate; without a valid key it starts and retries the connection. The worker is open source and the image is pinned to a specific release tag.",
+  "short_desc": "Self-hosted worker for Warp Factories cloud coding agents",
+  "author": "Mohammad Reza Rastgoo",
+  "source": "https://github.com/warpdotdev/oz-agent-worker",
+  "website": "https://www.warp.dev/factories",
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Warp Self-Hosted Worker API Key",
+      "hint": "A self-hosted worker API key (starts with wk-) from your Warp Enterprise account. Required for the worker to authenticate to the Automation Platform.",
+      "placeholder": "wk-...",
+      "env_variable": "WARP_API_KEY",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Worker ID",
+      "hint": "A stable identifier for this worker. Warp routes runs to workers by this id.",
+      "placeholder": "runtipi-worker",
+      "env_variable": "WORKER_ID",
+      "required": true,
+      "default": "runtipi-worker"
+    },
+    {
+      "type": "text",
+      "label": "Extra CLI Arguments (optional)",
+      "hint": "Any additional flags to pass to the oz-agent-worker binary, e.g. a path to a YAML config file.",
+      "placeholder": "--config /config/worker.yaml",
+      "env_variable": "WARP_EXTRA_ARGS"
+    }
+  ],
+  "supported_architectures": [
+    "amd64"
+  ],
+  "created_at": 1794922770164,
+  "updated_at": 1794922770164
+}
