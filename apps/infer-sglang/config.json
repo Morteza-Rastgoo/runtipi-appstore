@@ -1,0 +1,115 @@
+{
+  "name": "Infer: SGLang",
+  "id": "infer-sglang",
+  "available": true,
+  "dynamic_config": true,
+  "short_desc": "SGLang with RadixAttention prefix cache, HiCache CPU tier and MTP (NEXTN)",
+  "author": "Morteza Rastgoo",
+  "port": 18102,
+  "categories": ["ai"],
+  "description": "SGLang v0.5.23 (CUDA 13). Radix prefix cache with Mamba-state tracking for Qwen3.5 hybrid models, HiCache host-RAM KV tier (KV_CPU_GB), NEXTN/MTP speculative decoding, priority scheduling, Prometheus /metrics, OpenAI and Anthropic /v1/messages APIs. Note: --mem-fraction-static is a share of TOTAL VRAM that SGLang may use, and it requires (1 - fraction) x total to be free after loading weights; while the host vLLM is running use 0.95 with the MPS cap (0=12G) as the real limit. Claude Code clients should set CLAUDE_CODE_ATTRIBUTION_HEADER=0 so the system prompt prefix stays cacheable.",
+  "tipi_version": 1,
+  "version": "v0.5.23-cu130",
+  "source": "https://github.com/sgl-project/sglang",
+  "website": "https://github.com/sgl-project/sglang",
+  "exposable": false,
+  "supported_architectures": ["amd64"],
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Models directory (host)",
+      "env_variable": "MODELS_DIR",
+      "default": "/opt/models",
+      "hint": "Host folder with your model weights. It is mounted read-only at the same path.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Model path",
+      "env_variable": "MODEL",
+      "default": "/opt/models/Qwen3.8-27B-Uncensored-FP8",
+      "hint": "Absolute path inside the models directory, for example /opt/models/<model>.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Served model name",
+      "env_variable": "SERVED_NAME",
+      "default": "fable",
+      "hint": "Name clients send in the `model` field.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "GPU memory fraction",
+      "env_variable": "GPU_FRAC",
+      "default": "0.85",
+      "hint": "Fraction of total VRAM for weights + KV. Smoke test: 0.10.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Max context length",
+      "env_variable": "MAX_LEN",
+      "default": "262144",
+      "hint": "Tokens per request (prompt + output).",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Max concurrent sequences",
+      "env_variable": "MAX_SEQS",
+      "default": "32",
+      "hint": "Running requests per batch.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Speculative tokens (MTP)",
+      "env_variable": "SPEC_TOKENS",
+      "default": "3",
+      "hint": "Native MTP draft tokens. 0 disables. The DSpine DFlash draft is not portable.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "CPU KV cache (GB)",
+      "env_variable": "KV_CPU_GB",
+      "default": "32",
+      "hint": "Host-RAM KV tier size. 0 disables.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "MPS VRAM cap",
+      "env_variable": "MPS_MEM_LIMIT",
+      "default": "0=88G",
+      "hint": "CUDA_MPS_PINNED_DEVICE_MEM_LIMIT. Smoke test with host vLLM running: 0=12G.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "MPS SM share (%)",
+      "env_variable": "MPS_THREAD_PCT",
+      "default": "100",
+      "hint": "CUDA_MPS_ACTIVE_THREAD_PERCENTAGE. Smoke test: 30.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Chat template",
+      "env_variable": "CHAT_TEMPLATE",
+      "default": "/opt/models/Qwen3.8-27B-FP8/chat_template.jinja",
+      "hint": "Jinja file, or `none` for the model's own template (use `none` for the smoke model).",
+      "required": false
+    },
+    {
+      "type": "text",
+      "label": "Extra engine args",
+      "env_variable": "EXTRA_ARGS",
+      "default": "",
+      "hint": "Appended verbatim to the engine command.",
+      "required": false
+    }
+  ]
+}
