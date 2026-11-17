@@ -1,0 +1,25 @@
+{
+  "$schema": "../app-info-schema.json",
+  "name": "OpenHands",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 8000,
+  "id": "openhands",
+  "tipi_version": 21,
+  "version": "1.41.0",
+  "categories": [
+    "development"
+  ],
+  "description": "OpenHands Agent Canvas — a fully self-hosted control plane for running fleets of coding agents across your software development lifecycle. It is the self-hosted alternative to Warp Factories: the control plane (conversations, runs, transcripts, automations, workspaces) runs on this box, and the agents run against the local LLM (vLLM) and the local project (Phone-Projects) with the local Android SDK. No cloud, no subscription, MIT-licensed. The UI is served at the root of the subdomain and is gated behind the RunTipi login.",
+  "short_desc": "Self-hosted control plane for a fleet of coding agents (OpenHands Agent Canvas)",
+  "author": "Morteza Rastgoo",
+  "website": "https://www.openhands.dev/",
+  "source": "https://github.com/OpenHands/OpenHands",
+  "form_fields": [],
+  "supported_architectures": [
+    "amd64"
+  ],
+  "created_at": 1794825000000,
+  "updated_at": 1794949000000
+}

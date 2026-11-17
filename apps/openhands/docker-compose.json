@@ -1,0 +1,48 @@
+{
+  "services": {
+    "openhands": {
+      "image": "ghcr.io/openhands/agent-canvas:1.41.0",
+      "container_name": "openhands",
+      "user": "1000:1000",
+      "restart": "unless-stopped",
+      "environment": {
+        "HOME": "/home/openhands",
+        "XDG_CONFIG_HOME": "/home/openhands/.openhands/config",
+        "AGENT_CANVAS_BASE_PATH": "/",
+        "TZ": "${TZ}"
+      },
+      "ports": [
+        "${APP_PORT}:8000"
+      ],
+      "volumes": [
+        "/home/morteza/.openhands:/home/openhands/.openhands",
+        "/home/morteza/projects:/projects",
+        "/home/morteza/Android/Sdk:/opt/android-sdk"
+      ],
+      "labels": {
+        "traefik.enable": "true",
+        "traefik.http.routers.openhands.rule": "Host(`${APP_DOMAIN}`)",
+        "traefik.http.routers.openhands.entrypoints": "websecure",
+        "traefik.http.routers.openhands.tls.certresolver": "myresolver",
+        "traefik.http.routers.openhands.middlewares": "runtipi",
+        "traefik.http.services.openhands.loadbalancer.server.port": "8000",
+        "traefik.http.middlewares.openhands-noindex.headers.customResponseHeaders.X-Robots-Tag": "noindex, nofollow",
+        "traefik.http.services.openhands.middlewares": "openhands-noindex",
+        "runtipi.managed": "true"
+      },
+      "x-runtipi": {
+        "is_main": true,
+        "internal_port": 8000
+      },
+      "networks": [
+        "tipi_main_network"
+      ]
+    }
+  },
+  "networks": {
+    "tipi_main_network": {
+      "name": "runtipi_tipi_main_network",
+      "external": true
+    }
+  }
+}

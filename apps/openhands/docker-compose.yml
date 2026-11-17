@@ -1,0 +1,58 @@
+services:
+  openhands:
+    container_name: openhands
+    # Pinned release of OpenHands Agent Canvas (control plane v1.41.0,
+    # OpenHands core v1.62.0). Bundles the Agent Server, Automation Server and
+    # the web frontend behind one ingress on :8000.
+    image: ghcr.io/openhands/agent-canvas:1.41.0
+    # Run as the host user (morteza, uid 1000) so the agent's writes to the
+    # project and the Android SDK are owned by the user, not root. The image's
+    # default user (uid 10001) cannot write to the uid-1000 host dirs.
+    user: "1000:1000"
+    restart: unless-stopped
+    environment:
+      # The image's default user has HOME=/home/openhands; when we override the
+      # uid we must set it explicitly or the persistence dir resolves to
+      # //.openhands and the preflight fails.
+      - HOME=/home/openhands
+      # Browser tools write config under XDG_CONFIG_HOME. Point it inside the
+      # (writable) persistence dir, since /home/openhands is owned by the image
+      # user and is not writable by uid 1000.
+      - XDG_CONFIG_HOME=/home/openhands/.openhands/config
+      # Serve the UI at the root of the subdomain (the image default is /canvas).
+      - AGENT_CANVAS_BASE_PATH=/
+      - TZ=${TZ}
+    ports:
+      - ${APP_PORT}:8000
+    volumes:
+      # Shared OpenHands state: settings, LLM profiles, skills, conversations.
+      # The local LLM is configured here (settings.json + profiles/) to point at
+      # the box's vLLM (model `fable` over the Tailscale IP). Reusing this dir
+      # is what keeps the RunTipi app, the CLI and the skills on one source of
+      # truth.
+      - /home/morteza/.openhands:/home/openhands/.openhands
+      # Agent workspace. Mounted at /projects (the app probes /projects for a
+      # writable workspace). The first project is Phone-Projects, reachable at
+      # /projects/Phone-Projects.
+      - /home/morteza/projects:/projects
+      # Android SDK for Gradle / Android-Gradle-Plugin builds.
+      - /home/morteza/Android/Sdk:/opt/android-sdk
+    networks:
+      - tipi_main_network
+    labels:
+      runtipi.managed: "true"
+      # Exposed on a subdomain, behind the RunTipi login, and hidden from
+      # search engines (noindex at the service level covers all routers).
+      traefik.enable: "true"
+      traefik.http.routers.openhands.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.openhands.entrypoints: websecure
+      traefik.http.routers.openhands.tls.certresolver: myresolver
+      traefik.http.routers.openhands.middlewares: runtipi
+      traefik.http.services.openhands.loadbalancer.server.port: "8000"
+      traefik.http.middlewares.openhands-noindex.headers.customResponseHeaders.X-Robots-Tag: noindex, nofollow
+      traefik.http.services.openhands.middlewares: openhands-noindex
+
+networks:
+  tipi_main_network:
+    name: runtipi_tipi_main_network
+    external: true
