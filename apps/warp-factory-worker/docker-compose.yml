@@ -1,7 +1,11 @@
 services:
   warp-factory-worker:
     container_name: warp-factory-worker
-    image: warpdotdev/oz-agent-worker:v2026-11-12-16-17-15
+    # Derived from the pinned Warp release (warpdotdev/oz-agent-worker) with
+    # python3 added, so the command backend's dispatch script can run in the
+    # Alpine worker image. Built + pushed to the local registry (see the build
+    # notes in metadata/description.md).
+    image: 127.0.0.1:5000/oz-agent-worker-local:v2026-11-12-16-17-15
     user: "0"
     command: --worker-id ${WORKER_ID} --config-file /data/worker.yaml ${WARP_EXTRA_ARGS}
     environment:
@@ -10,7 +14,18 @@ services:
       - TZ=${TZ:-UTC}
     restart: unless-stopped
     volumes:
+      # Host Docker socket (kept so the Docker backend can be re-enabled; the
+      # command backend does not use it).
       - /var/run/docker.sock:/var/run/docker.sock
+      # Seeded worker.yaml + dispatch-oz.py + per-run logs.
       - ${APP_DATA_DIR}/data:/data
+      # First project: this box's local Phone-Projects checkout (rw, so the agent
+      # can build and commit).
+      - /home/morteza/projects/Phone-Projects:/workspace/phone-projects
+      # Android SDK for Gradle / Android-Gradle-Plugin builds (rw, so AGP can
+      # accept licenses / fetch missing components).
+      - /home/morteza/Android/Sdk:/opt/android-sdk
+      # The host oz CLI (static binary, runs on the Alpine/musl worker image).
+      - /opt/warpdotdev/oz-stable:/opt/oz:ro
     labels:
       runtipi.managed: true

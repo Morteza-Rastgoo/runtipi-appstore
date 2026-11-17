@@ -2,45 +2,51 @@
 #
 # The factory CONTROL PLANE (factories, runs, projects, agents) lives in Warp's
 # cloud and is not publicly self-hostable. This worker is the self-hosted half:
-# it runs the actual agent tasks on local Docker, using the local vLLM model and
-# the local Android SDK, with Phone-Projects as the first project.
+# it runs the actual agent tasks on this box, using the local vLLM model and the
+# local Android SDK, with Phone-Projects as the first project.
 #
 # Loaded by the worker via:  --config-file /data/worker.yaml
-# (the app seeds this file into the container's /data volume on install).
+# (the app seeds this file + the dispatch script into the container's /data).
+#
+# BACKEND: command
+#   The command backend hands our operator dispatch script (data/dispatch-oz.py,
+#   seeded to /data/dispatch-oz.py) a versioned JSON payload on stdin for each
+#   task. The script runs the host `oz` CLI (mounted at /opt/oz/oz) IN our local
+#   project directory (/workspace/phone-projects), so the factory's first project
+#   is this box's ~/projects/Phone-Projects — not a fresh server-side clone. This
+#   is the most self-hosted path: our script, our oz CLI, our model, our SDK.
+#   (The Docker backend instead spawns a per-task container with WorkingDir
+#   /workspace where the oz agent clones the configured repo.)
 
 # Run at most two agent tasks at once. This box is a shared homeserver, so we
 # cap concurrency to keep the GPU/CPU available for the rest of the stack.
 max_concurrent_tasks: 2
 
 backend:
-  # Docker backend: the worker spawns one isolated container per task via the
-  # host Docker socket (already mounted). This is Warp's recommended, most
-  # robust backend. See metadata/description.md for the "direct" alternative
-  # (runs tasks on the host with the local oz CLI + host coding CLIs).
-  docker:
-    # Pull task/sidecar images once, then reuse them from the local image store
-    # (self-hosted: minimise external pulls). Set to "Always" to force a fresh
-    # pull on every task, or "Never" to run fully offline once images are cached.
-    image_pull_policy: "IfNotPresent"
+  command:
+    # Invoked by the worker as `/bin/sh -c "<this>"`; the task payload arrives on
+    # stdin. python3 is added to the worker image (see the derived image in
+    # docker-compose.json) because the stock Alpine image has no python3/jq.
+    dispatch_command: "python3 /data/dispatch-oz.py"
 
-    # Mount this box's resources into EVERY task container.
-    volumes:
-      # First project: the Phone-Projects app suite (Kotlin/Gradle, multi-module).
-      # Mounted read-write so the agent can build and commit. In the Warp cloud,
-      # point the project's working directory at /workspace/phone-projects.
-      - "/home/morteza/projects/Phone-Projects:/workspace/phone-projects"
-      # Android SDK (sdkmanager, adb, platforms, build-tools, NDK) for Gradle/AGP
-      # builds. Mounted read-write so AGP can accept licenses / fetch missing bits.
-      - "/home/morteza/Android/Sdk:/opt/android-sdk"
-
-    # Environment injected into every task container.
+    # Environment for the dispatch process. The dispatch script inherits this and
+    # overlays the per-task env the server sends, then execs `oz` in OZ_PROJECT_DIR.
     environment:
+      # --- The oz CLI (mounted read-only from the host at /opt/oz). ---
+      - name: OZ_BIN
+        value: "/opt/oz/oz"
+      # --- First project: run the agent in this box's local Phone-Projects. ---
+      - name: OZ_PROJECT_DIR
+        value: "/workspace/phone-projects"
+      # --- Where per-run payloads + logs are written (on the /data volume). ---
+      - name: OZ_LOCAL_RUN_LOG_DIR
+        value: "/data/run-logs"
       # --- Local LLM (vLLM): route every agent harness to the self-hosted model. ---
       # vLLM serves BOTH the Anthropic (/v1/messages) and OpenAI
       # (/v1/chat/completions) APIs on the Tailscale IP; model id is "fable"
-      # (Qwen3.8-27B-Uncensored-FP8, 262K context). Reachable from the default
-      # Docker bridge (verified). Remove these entries to fall back to Warp's
-      # cloud models instead.
+      # (Qwen3.8-27B-Uncensored-FP8, 262K context). Reachable from the worker
+      # container over the runtipi network (verified). Remove these entries to
+      # fall back to Warp's cloud models instead.
       - name: ANTHROPIC_BASE_URL
         value: "http://100.103.38.100:8010"
       - name: ANTHROPIC_API_KEY

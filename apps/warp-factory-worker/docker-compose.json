@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "warp-factory-worker",
-      "image": "warpdotdev/oz-agent-worker:v2026-11-12-16-17-15",
+      "image": "127.0.0.1:5000/oz-agent-worker-local:v2026-11-12-16-17-15",
       "isMain": true,
       "user": "0",
       "restart": "unless-stopped",
@@ -16,7 +16,10 @@
       ],
       "volumes": [
         { "hostPath": "/var/run/docker.sock", "containerPath": "/var/run/docker.sock" },
-        { "hostPath": "${APP_DATA_DIR}/data", "containerPath": "/data" }
+        { "hostPath": "${APP_DATA_DIR}/data", "containerPath": "/data" },
+        { "hostPath": "/home/morteza/projects/Phone-Projects", "containerPath": "/workspace/phone-projects" },
+        { "hostPath": "/home/morteza/Android/Sdk", "containerPath": "/opt/android-sdk" },
+        { "hostPath": "/opt/warpdotdev/oz-stable", "containerPath": "/opt/oz", "readOnly": true }
       ]
     }
   ]
