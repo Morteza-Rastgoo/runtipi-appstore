@@ -4,7 +4,7 @@
   "available": true,
   "exposable": true,
   "dynamic_config": true,
-  "port": 8000,
+  "port": 8200,
   "id": "openhands",
   "tipi_version": 21,
   "version": "1.41.0",
