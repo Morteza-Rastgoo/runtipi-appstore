@@ -12,7 +12,7 @@
       "environment": [
         { "key": "HOME", "value": "/home/openhands" },
         { "key": "XDG_CONFIG_HOME", "value": "/home/openhands/.openhands/config" },
-        { "key": "AGENT_CANVAS_BASE_PATH", "value": "/" },
+        { "key": "AGENT_CANVAS_BASE_PATH", "value": "/canvas" },
         { "key": "TZ", "value": "${TZ}" }
       ],
       "volumes": [

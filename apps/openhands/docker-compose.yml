@@ -19,8 +19,11 @@ services:
       # (writable) persistence dir, since /home/openhands is owned by the image
       # user and is not writable by uid 1000.
       - XDG_CONFIG_HOME=/home/openhands/.openhands/config
-      # Serve the UI at the root of the subdomain (the image default is /canvas).
-      - AGENT_CANVAS_BASE_PATH=/
+      # The image is built with a /canvas asset base; overriding it to / makes
+      # the HTML reference /canvas/assets/* while the server serves /assets/*,
+      # which 404s and blanks the page. Keep the self-consistent /canvas base:
+      # the subdomain root / 308-redirects to /canvas/, and assets resolve.
+      - AGENT_CANVAS_BASE_PATH=/canvas
       - TZ=${TZ}
     ports:
       - ${APP_PORT}:8000

@@ -44,8 +44,9 @@ Everything the agent needs is local:
 - **Persistence** is the shared `~/.openhands` directory (settings, LLM
   profiles, skills, conversations). Reusing it keeps the RunTipi app, the
   `agent-canvas` CLI and the OpenHands skills on a single source of truth.
-- The UI is served at `/` (`AGENT_CANVAS_BASE_PATH=/`); the image default is
-  `/canvas`.
+- The UI is served at the `/canvas` base path (the image's self-consistent
+  default). The subdomain root `/` 308-redirects to `/canvas/`, so opening the
+  bare subdomain lands you in the app.
 
 ## Using it
 
