@@ -8,7 +8,7 @@
       "isMain": true,
       "user": "0",
       "restart": "unless-stopped",
-      "command": "--worker-id ${WORKER_ID} ${WARP_EXTRA_ARGS}",
+      "command": "--worker-id ${WORKER_ID} --config-file /data/worker.yaml ${WARP_EXTRA_ARGS}",
       "environment": [
         { "key": "WARP_API_KEY", "value": "${WARP_API_KEY}" },
         { "key": "WORKER_ID", "value": "${WORKER_ID}" },

@@ -1,0 +1,58 @@
+# Warp Factories self-hosted worker — integrated with this box's local resources.
+#
+# The factory CONTROL PLANE (factories, runs, projects, agents) lives in Warp's
+# cloud and is not publicly self-hostable. This worker is the self-hosted half:
+# it runs the actual agent tasks on local Docker, using the local vLLM model and
+# the local Android SDK, with Phone-Projects as the first project.
+#
+# Loaded by the worker via:  --config-file /data/worker.yaml
+# (the app seeds this file into the container's /data volume on install).
+
+# Run at most two agent tasks at once. This box is a shared homeserver, so we
+# cap concurrency to keep the GPU/CPU available for the rest of the stack.
+max_concurrent_tasks: 2
+
+backend:
+  # Docker backend: the worker spawns one isolated container per task via the
+  # host Docker socket (already mounted). This is Warp's recommended, most
+  # robust backend. See metadata/description.md for the "direct" alternative
+  # (runs tasks on the host with the local oz CLI + host coding CLIs).
+  docker:
+    # Pull task/sidecar images once, then reuse them from the local image store
+    # (self-hosted: minimise external pulls). Set to "Always" to force a fresh
+    # pull on every task, or "Never" to run fully offline once images are cached.
+    image_pull_policy: "IfNotPresent"
+
+    # Mount this box's resources into EVERY task container.
+    volumes:
+      # First project: the Phone-Projects app suite (Kotlin/Gradle, multi-module).
+      # Mounted read-write so the agent can build and commit. In the Warp cloud,
+      # point the project's working directory at /workspace/phone-projects.
+      - "/home/morteza/projects/Phone-Projects:/workspace/phone-projects"
+      # Android SDK (sdkmanager, adb, platforms, build-tools, NDK) for Gradle/AGP
+      # builds. Mounted read-write so AGP can accept licenses / fetch missing bits.
+      - "/home/morteza/Android/Sdk:/opt/android-sdk"
+
+    # Environment injected into every task container.
+    environment:
+      # --- Local LLM (vLLM): route every agent harness to the self-hosted model. ---
+      # vLLM serves BOTH the Anthropic (/v1/messages) and OpenAI
+      # (/v1/chat/completions) APIs on the Tailscale IP; model id is "fable"
+      # (Qwen3.8-27B-Uncensored-FP8, 262K context). Reachable from the default
+      # Docker bridge (verified). Remove these entries to fall back to Warp's
+      # cloud models instead.
+      - name: ANTHROPIC_BASE_URL
+        value: "http://100.103.38.100:8010"
+      - name: ANTHROPIC_API_KEY
+        value: "vllm-local"
+      - name: ANTHROPIC_MODEL
+        value: "fable"
+      - name: OPENAI_BASE_URL
+        value: "http://100.103.38.100:8010/v1"
+      - name: OPENAI_API_KEY
+        value: "vllm-local"
+      # --- Android SDK location for Gradle / Android Gradle Plugin builds. ---
+      - name: ANDROID_HOME
+        value: "/opt/android-sdk"
+      - name: ANDROID_SDK_ROOT
+        value: "/opt/android-sdk"
