@@ -87,6 +87,20 @@ worker container (verified: `oz --version` inside the container).
 - Outbound internet access from this box to `oz.warp.dev` (the worker dials out;
   no inbound port is opened).
 
+## Free-plan status (blocked)
+
+This box is kept on Warp's **free plan**, and the self-hosted worker is **not
+available on it**: Factories / self-hosted workers require an **Enterprise**
+seat, and Warp's onboarding forces a **$10+ usage purchase** before a `wk-`
+worker key can be issued (there is no free tier or skip for it). So the worker
+app is built and ready, but it will sit in `401 Unauthorized, retrying` until a
+paid Enterprise `wk-` key is provided.
+
+**The free, 100% self-hosted path is the `openhands` app in this store** (see
+`apps/openhands/`) — same "fleet of coding agents on this box" outcome, no
+cloud control plane, no subscription. Use that unless a Warp Enterprise key is
+bought.
+
 ## Making Phone-Projects the first project
 
 1. In the Warp web app, create (or open) a **factory** and add a **project**.
