@@ -7,7 +7,7 @@
   "port": 8787,
   "id": "cloudflare-os",
   "tipi_version": 1,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "categories": ["ai", "development"],
   "description": "Cloudflare OS — an operating system for AI productivity: agent chat, sandboxed app development (gadgets), and capability-based security (Gatekeepers). This self-hosted build runs the full stack (frontend + backend + all Gatekeeper Workers) in a single workerd container on port 8787, with persistent state and OAuth credentials supplied as app settings.",
   "short_desc": "An operating system for AI: agents, gadgets, and Gatekeepers",
@@ -49,5 +49,5 @@
   ],
   "supported_architectures": ["amd64"],
   "created_at": 1794765813276,
-  "updated_at": 1794765813276
+  "updated_at": 1795122919725
 }
