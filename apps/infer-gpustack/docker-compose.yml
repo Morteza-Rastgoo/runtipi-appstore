@@ -10,15 +10,21 @@ services:
     runtime: nvidia
     entrypoint: ["/bin/bash", "-c"]
     command:
-      - "exec /usr/bin/entrypoint.sh --port 80 --data-dir \"${APP_DATA_DIR}/data/gpustack\" --bootstrap-password \"$${GPUSTACK_ADMIN_PASSWORD}\" --enable-worker --disable-update-check"
+      - "exec /usr/bin/entrypoint.sh --port 80 --data-dir \"${APP_DATA_DIR}/data/gpustack\" --worker-ip ${WORKER_IP} --bootstrap-password \"$${GPUSTACK_ADMIN_PASSWORD}\" --enable-worker --disable-update-check"
     ports:
       - "127.0.0.1:${APP_PORT}:80"
+      - "${WORKER_IP}:10150:10150"
     environment:
       GPUSTACK_ADMIN_PASSWORD: "${GPUSTACK_ADMIN_PASSWORD}"
+      GPUSTACK_RUNTIME_DEPLOY_MIRRORED_DEPLOYMENT: "true"
+      GPUSTACK_RUNTIME_DEPLOY_MIRRORED_NAME: "infer-gpustack"
+      GPUSTACK_RUNTIME_DEPLOY_MIRRORED_DEPLOYMENT_IGNORE_VOLUMES: "/var/run/docker.sock"
+      CUDA_MPS_PIPE_DIRECTORY: "/tmp/nvidia-mps"
     volumes:
       - "${MODELS_DIR}:${MODELS_DIR}:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${APP_DATA_DIR}/data/gpustack:${APP_DATA_DIR}/data/gpustack"
+      - "/tmp/nvidia-mps:/tmp/nvidia-mps"
     ulimits:
       memlock: -1
       stack: 67108864
