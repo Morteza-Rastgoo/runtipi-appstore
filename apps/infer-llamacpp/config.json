@@ -1,0 +1,123 @@
+{
+  "name": "Infer: llama.cpp server",
+  "id": "infer-llamacpp",
+  "available": true,
+  "dynamic_config": true,
+  "short_desc": "llama.cpp llama-server (GGUF Q8_0) with MTP drafts, unified KV and Anthropic API",
+  "author": "Morteza Rastgoo",
+  "port": 18108,
+  "categories": ["ai"],
+  "description": "llama.cpp llama-server build 12679 (CUDA 13, native sm_120 kernels), pinned by digest. Serves a GGUF conversion of the model (Q8_0) with its vision projector, flash attention, q8_0 KV in one unified buffer shared by all slots, context checkpoints for the hybrid (Gated DeltaNet) layers, a host-RAM prompt cache (--cache-ram), native MTP speculative decoding (--spec-type draft-mtp, from the NextN tensors kept in the GGUF), Prometheus /metrics, /slots, and OpenAI plus Anthropic /v1/messages APIs. Limits: no request priority, and GPU_FRAC is ignored (VRAM use follows the KV pool size).",
+  "tipi_version": 1,
+  "version": "b12679",
+  "source": "https://github.com/ggml-org/llama.cpp",
+  "website": "https://github.com/ggml-org/llama.cpp",
+  "exposable": false,
+  "supported_architectures": ["amd64"],
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Models directory (host)",
+      "env_variable": "MODELS_DIR",
+      "default": "/opt/models",
+      "hint": "Host folder with your model weights. It is mounted read-only at the same path.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Model path (GGUF)",
+      "env_variable": "MODEL",
+      "default": "/opt/models/Qwen3.8-27B-Uncensored-GGUF/Qwen3.8-27B-Uncensored-Q8_0.gguf",
+      "hint": "GGUF file made with llama.cpp convert_hf_to_gguf.py (see the bake-off README).",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Vision projector (mmproj GGUF)",
+      "env_variable": "MMPROJ",
+      "default": "/opt/models/Qwen3.8-27B-Uncensored-GGUF/mmproj-Qwen3.8-27B-Uncensored-Q8_0.gguf",
+      "hint": "mmproj file from convert_hf_to_gguf.py --mmproj, or `none` for text only.",
+      "required": false
+    },
+    {
+      "type": "text",
+      "label": "Served model name",
+      "env_variable": "SERVED_NAME",
+      "default": "fable",
+      "hint": "Name clients send in the `model` field.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "GPU memory fraction",
+      "env_variable": "GPU_FRAC",
+      "default": "0.85",
+      "hint": "Fraction of total VRAM for weights + KV. Smoke test: 0.10.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Max concurrent sequences",
+      "env_variable": "MAX_SEQS",
+      "default": "32",
+      "hint": "Running requests per batch.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Speculative tokens (MTP)",
+      "env_variable": "SPEC_TOKENS",
+      "default": "3",
+      "hint": "Native MTP draft tokens. 0 disables. The DSpine DFlash draft is not portable.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "MPS VRAM cap",
+      "env_variable": "MPS_MEM_LIMIT",
+      "default": "0=88G",
+      "hint": "CUDA_MPS_PINNED_DEVICE_MEM_LIMIT. Smoke test with host vLLM running: 0=12G.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "MPS SM share (%)",
+      "env_variable": "MPS_THREAD_PCT",
+      "default": "100",
+      "hint": "CUDA_MPS_ACTIVE_THREAD_PERCENTAGE. Smoke test: 30.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Chat template",
+      "env_variable": "CHAT_TEMPLATE",
+      "default": "/opt/models/Qwen3.8-27B-FP8/chat_template.jinja",
+      "hint": "Jinja file, or `none` for the model's own template (use `none` for the smoke model).",
+      "required": false
+    },
+    {
+      "type": "text",
+      "label": "Extra engine args",
+      "env_variable": "EXTRA_ARGS",
+      "default": "",
+      "hint": "Appended verbatim to the engine command.",
+      "required": false
+    },
+    {
+      "type": "text",
+      "label": "KV pool (tokens, all slots)",
+      "env_variable": "MAX_LEN",
+      "default": "524288",
+      "hint": "-c with a unified KV buffer: total tokens shared by all slots; one request may use all of it.",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Host-RAM prompt cache (GB)",
+      "env_variable": "KV_CPU_GB",
+      "default": "8",
+      "hint": "--cache-ram: idle slot states kept in host RAM for reuse. 0 disables.",
+      "required": true
+    }
+  ]
+}
