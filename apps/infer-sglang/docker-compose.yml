@@ -10,7 +10,7 @@ services:
     runtime: nvidia
     entrypoint: ["/bin/bash", "-c"]
     command:
-      - "TPL=(); if [ -n \"$${CHAT_TEMPLATE}\" ] && [ \"$${CHAT_TEMPLATE}\" != none ]; then TPL=(--chat-template \"$${CHAT_TEMPLATE}\"); fi; SPEC=(); if [ \"$${SPEC_TOKENS:-0}\" -gt 0 ]; then SPEC=(--speculative-algorithm NEXTN --speculative-num-steps \"$${SPEC_TOKENS}\" --speculative-eagle-topk 1 --speculative-num-draft-tokens \"$$(($${SPEC_TOKENS}+1))\"); fi; OFF=(); if [ \"$${KV_CPU_GB:-0}\" -gt 0 ]; then OFF=(--enable-hierarchical-cache --hicache-size \"$${KV_CPU_GB}\" --hicache-write-policy write_through); fi; exec python3 -m sglang.launch_server --model-path \"$${MODEL}\" --served-model-name \"$${SERVED_NAME}\" --host 0.0.0.0 --port 30000 --mem-fraction-static \"$${GPU_FRAC}\" --context-length \"$${MAX_LEN}\" --max-running-requests \"$${MAX_SEQS}\" --chunked-prefill-size 16384 --kv-cache-dtype fp8_e4m3 --enable-metrics --enable-cache-report --enable-priority-scheduling --tool-call-parser qwen3_coder --reasoning-parser qwen3 --trust-remote-code \"$${TPL[@]}\" \"$${SPEC[@]}\" \"$${OFF[@]}\" $${EXTRA_ARGS}"
+      - "TPL=(); if [ -n \"$${CHAT_TEMPLATE}\" ] && [ \"$${CHAT_TEMPLATE}\" != none ]; then TPL=(--chat-template \"$${CHAT_TEMPLATE}\"); fi; SPEC=(); if [ \"$${SPEC_TOKENS:-0}\" -gt 0 ]; then SPEC=(--speculative-algorithm NEXTN --speculative-num-steps \"$${SPEC_TOKENS}\" --speculative-eagle-topk 1 --speculative-num-draft-tokens \"$$(($${SPEC_TOKENS}+1))\"); fi; OFF=(); if [ \"$${KV_CPU_GB:-0}\" -gt 0 ]; then OFF=(--enable-hierarchical-cache --hicache-size \"$${KV_CPU_GB}\" --hicache-write-policy write_through); fi; exec python3 -m sglang.launch_server --model-path \"$${MODEL}\" --served-model-name \"$${SERVED_NAME}\" --host 0.0.0.0 --port 30000 --mem-fraction-static \"$${GPU_FRAC}\" --context-length \"$${MAX_LEN}\" --max-running-requests \"$${MAX_SEQS}\" --chunked-prefill-size 16384 --kv-cache-dtype fp8_e4m3 --enable-metrics --enable-cache-report --enable-priority-scheduling --schedule-policy fcfs --schedule-low-priority-values-first --tool-call-parser qwen3_coder --reasoning-parser qwen3 --trust-remote-code \"$${TPL[@]}\" \"$${SPEC[@]}\" \"$${OFF[@]}\" $${EXTRA_ARGS}"
     ports:
       - "127.0.0.1:${APP_PORT}:30000"
     environment:
@@ -32,6 +32,7 @@ services:
       CUDA_MPS_ACTIVE_THREAD_PERCENTAGE: "${MPS_THREAD_PCT}"
       SGLANG_DISABLE_REQUEST_LOGGING: "1"
       DO_NOT_TRACK: "1"
+      SGLANG_ENABLE_REQUEST_HEADER_OVERRIDES: "1"
     volumes:
       - "${MODELS_DIR}:${MODELS_DIR}:ro"
       - "${APP_DATA_DIR}/data:/data"

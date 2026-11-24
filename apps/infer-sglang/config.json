@@ -7,7 +7,7 @@
   "author": "Morteza Rastgoo",
   "port": 18102,
   "categories": ["ai"],
-  "description": "SGLang v0.5.23 (CUDA 13). Radix prefix cache with Mamba-state tracking for Qwen3.5 hybrid models, HiCache host-RAM KV tier (KV_CPU_GB), NEXTN/MTP speculative decoding, priority scheduling, Prometheus /metrics, OpenAI and Anthropic /v1/messages APIs. Note: --mem-fraction-static is a share of TOTAL VRAM that SGLang may use, and it requires (1 - fraction) x total to be free after loading weights; while the host vLLM is running use 0.95 with the MPS cap (0=12G) as the real limit. Claude Code clients should set CLAUDE_CODE_ATTRIBUTION_HEADER=0 so the system prompt prefix stays cacheable.",
+  "description": "SGLang v0.5.23 (CUDA 13). Radix prefix cache with Mamba-state tracking for Qwen3.5 hybrid models, HiCache host-RAM KV tier (KV_CPU_GB), NEXTN/MTP speculative decoding, priority scheduling (lower value first, header x-override-priority), Prometheus /metrics, OpenAI and Anthropic /v1/messages APIs. Note: --mem-fraction-static is a share of TOTAL VRAM that SGLang may use, and it requires (1 - fraction) x total to be free after loading weights; while the host vLLM is running use 0.95 with the MPS cap (0=12G) as the real limit. Claude Code clients should set CLAUDE_CODE_ATTRIBUTION_HEADER=0 so the system prompt prefix stays cacheable.",
   "tipi_version": 1,
   "version": "v0.5.23-cu130",
   "source": "https://github.com/sgl-project/sglang",
