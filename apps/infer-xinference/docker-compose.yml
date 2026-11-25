@@ -10,7 +10,7 @@ services:
     runtime: nvidia
     entrypoint: ["/bin/bash", "-c"]
     command:
-      - "export XINFERENCE_HOME=/data/xinference; xinference-local -H 0.0.0.0 -p 9997 --metrics-exporter-port 9998 & SRV=$$!; until python3 -c \"import urllib.request as u; u.urlopen('http://127.0.0.1:9997/v1/models', timeout=3)\" 2>/dev/null; do kill -0 $$SRV || exit 1; sleep 3; done; xinference launch -e http://127.0.0.1:9997 -n \"$${XINF_FAMILY}\" -en vllm -f fp8 -s \"$${XINF_SIZE}\" -mp \"$${MODEL}\" -u \"$${SERVED_NAME}\" --context-length \"$${MAX_LEN}\" --gpu_memory_utilization \"$${GPU_FRAC}\" --max_model_len \"$${MAX_LEN}\" --max_num_seqs \"$${MAX_SEQS}\" --enable_prefix_caching true --kv_cache_dtype fp8 $${EXTRA_ARGS} || echo 'xinference launch failed; the server keeps running for the UI'; wait $$SRV"
+      - "export XINFERENCE_HOME=/data/xinference; xinference-local -H 0.0.0.0 -p 9997 --metrics-exporter-port 9998 & SRV=$$!; until python3 -c \"import urllib.request as u; u.urlopen('http://127.0.0.1:9997/v1/models', timeout=3)\" 2>/dev/null; do kill -0 $$SRV || exit 1; sleep 3; done; VP=(); if [ -n \"$${XINF_VLLM}\" ] && [ \"$${XINF_VLLM}\" != none ]; then VP=(-vp \"$${XINF_VLLM}\"); fi; xinference launch \"$${VP[@]}\" -e http://127.0.0.1:9997 -n \"$${XINF_FAMILY}\" -en vllm -f fp8 -s \"$${XINF_SIZE}\" -mp \"$${MODEL}\" -u \"$${SERVED_NAME}\" --context-length \"$${MAX_LEN}\" --gpu_memory_utilization \"$${GPU_FRAC}\" --max_model_len \"$${MAX_LEN}\" --max_num_seqs \"$${MAX_SEQS}\" --enable_prefix_caching true --kv_cache_dtype fp8 $${EXTRA_ARGS} || echo 'xinference launch failed; the server keeps running for the UI'; wait $$SRV"
     ports:
       - "127.0.0.1:${APP_PORT}:9997"
     environment:
@@ -37,6 +37,7 @@ services:
       DO_NOT_TRACK: "1"
       XINF_FAMILY: "${XINF_FAMILY}"
       XINF_SIZE: "${XINF_SIZE}"
+      XINF_VLLM: "${XINF_VLLM}"
       XINFERENCE_AUTH_ADVANCED: "0"
     volumes:
       - "${MODELS_DIR}:${MODELS_DIR}:ro"

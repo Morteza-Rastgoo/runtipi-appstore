@@ -1,6 +1,6 @@
 # Infer: Xinference (vLLM engine)
 
-Xinference v4.2.0 slim image: a supervisor + worker with a web UI on the API port, an OpenAI and Anthropic API, and a model registry. The image ships no engine: on the first launch Xinference pip-installs vLLM into a per-model virtualenv under /data/xinference (needs internet, several GB, several minutes). The `qwen3.8` family pins vllm==0.21.0; Qwen3-Instruct takes the newest vLLM. The app starts the server, then launches MODEL as uid SERVED_NAME. Prefix caching and fp8 KV are passed as vLLM kwargs. SPEC_TOKENS, KV_CPU_GB and CHAT_TEMPLATE are ignored (Xinference uses the family template). Worker metrics: port 9998 inside the container.
+Xinference v4.2.0 slim image: a supervisor + worker with a web UI on the API port, an OpenAI and Anthropic API, and a model registry. The image ships no engine: on the first launch Xinference pip-installs vLLM into a per-model virtualenv under /data/xinference (needs internet, several GB, several minutes). The `qwen3.8` family pins vllm==0.21.0, which never finished loading the 27B here (2026-11-25), so XINF_VLLM (default vllm==0.33.0, as in infer-vllm) overrides it. The app starts the server, then launches MODEL as uid SERVED_NAME. Prefix caching and fp8 KV are passed as vLLM kwargs. SPEC_TOKENS, KV_CPU_GB and CHAT_TEMPLATE are ignored (Xinference uses the family template). Worker metrics: port 9998 inside the container.
 
 ## Notes
 
